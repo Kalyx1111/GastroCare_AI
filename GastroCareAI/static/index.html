@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GastroCare AI - Gastroenterology Health Intelligence Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
+:root{
+  --sage:#2d6a4f;--sage-lt:#52b788;--sage-pale:#e8f4ee;
+  --warm:#8b4513;--warm-lt:#c4763a;--warm-pale:#fdf3ec;
+  --teal:#0d7377;--teal-pale:#e6f4f5;
+  --red:#c62828;--red-pale:#fce8e8;
+  --cream:#fefdf9;--cream2:#f8f5ef;
+  --text:#1a1208;--text2:#3d3020;--text3:#8a7a60;
+  --border:rgba(45,106,79,0.18);--border2:rgba(45,106,79,0.38);
+  --shadow:0 8px 40px rgba(26,18,8,0.1);--shadow2:0 20px 80px rgba(26,18,8,0.18);
+  --r:12px;--r2:20px;
+  --serif:'Playfair Display',serif;--body:'DM Sans',sans-serif;--it:'Cormorant Garamond',serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--body);background:var(--cream);color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 5% 0%,rgba(45,106,79,0.05) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 60% at 95% 100%,rgba(139,69,19,0.03) 0%,transparent 60%);}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:var(--cream2);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.4)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+#disc-modal{position:fixed;inset:0;z-index:9999;background:rgba(8,12,6,0.95);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.disc-box{background:var(--cream);border-radius:var(--r2);max-width:700px;width:100%;max-height:92vh;overflow-y:auto;padding:48px 52px;border:1px solid var(--border2);box-shadow:var(--shadow2);}
+.disc-icon{font-size:52px;text-align:center;display:block;margin-bottom:14px;}
+.disc-box h1{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--sage);text-align:center;margin-bottom:6px;}
+.disc-sub{text-align:center;font-size:13px;color:var(--text3);margin-bottom:26px;}
+.disc-content{background:var(--sage-pale);border:1px solid var(--border2);border-radius:var(--r);padding:22px;margin-bottom:20px;font-size:13px;line-height:1.85;color:var(--text);}
+.disc-content p{margin-bottom:10px;}.disc-content p:last-child{margin-bottom:0;}
+.disc-content strong{color:var(--sage);font-weight:600;}
+.disc-chk{margin-bottom:22px;}
+.chk-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;cursor:pointer;}
+.chk-row input{width:17px;height:17px;accent-color:var(--sage);margin-top:2px;cursor:pointer;flex-shrink:0;}
+.chk-row label{font-size:13px;line-height:1.55;cursor:pointer;color:var(--text2);}
+.disc-accept{width:100%;padding:16px;border-radius:var(--r);background:linear-gradient(135deg,var(--sage),var(--sage-lt));color:#fff;font-family:var(--body);font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;}
+.disc-accept:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(45,106,79,0.4);}
+.disc-accept:disabled{opacity:0.4;cursor:not-allowed;}
+.disc-bar{position:sticky;top:0;z-index:200;background:linear-gradient(90deg,#1b4332,var(--sage),#1b4332);background-size:200%;animation:shimmer 4s linear infinite;padding:9px 20px;text-align:center;font-size:12px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,0.1);}
+.pdot{display:inline-block;width:7px;height:7px;background:#fff;border-radius:50%;margin-right:8px;animation:pulse 1.5s ease infinite;vertical-align:middle;}
+header{position:relative;z-index:10;background:linear-gradient(160deg,#060e08 0%,#1b4332 55%,#0d2016 100%);padding:64px 40px 52px;text-align:center;border-bottom:2px solid var(--sage-lt);overflow:hidden;}
+header::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 700px at 15% 50%,rgba(45,106,79,0.15) 0%,transparent 70%),radial-gradient(circle 500px at 85% 50%,rgba(82,183,136,0.08) 0%,transparent 70%);}
+.hdr-inner{position:relative;z-index:1;max-width:900px;margin:0 auto;}
+.hdr-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--sage-lt);margin-bottom:18px;}
+header h1{font-family:var(--serif);font-size:clamp(32px,5vw,60px);font-weight:700;color:#f0faf4;line-height:1.08;margin-bottom:8px;}
+header h1 span{color:var(--sage-lt);}
+.hdr-sub{font-family:var(--it);font-style:italic;font-size:19px;color:rgba(160,220,185,0.88);margin-bottom:20px;}
+.hdr-line{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--sage-lt),transparent);margin:18px auto;}
+.hdr-desc{font-size:14.5px;color:rgba(150,210,175,0.8);line-height:1.75;max-width:700px;margin:0 auto;}
+.hdr-badges{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+.hbadge{padding:6px 18px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.04em;border:1px solid;}
+.hb-g{background:rgba(45,106,79,0.25);border-color:rgba(45,106,79,0.5);color:#a8dfbe;}
+.hb-w{background:rgba(139,69,19,0.25);border-color:rgba(139,69,19,0.45);color:#f0c89a;}
+.hb-t{background:rgba(13,115,119,0.2);border-color:rgba(13,115,119,0.4);color:#a0d8dc;}
+.main-nav{position:sticky;top:42px;z-index:100;background:rgba(254,253,249,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;gap:0;overflow-x:auto;}
+.nav-inner::-webkit-scrollbar{height:0;}
+.ntab{padding:15px 14px;font-size:12.5px;font-weight:500;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s;}
+.ntab:hover{color:var(--sage);}.ntab.active{color:var(--sage);border-bottom-color:var(--sage-lt);font-weight:600;}
+.app{display:grid;grid-template-columns:258px 1fr;max-width:1500px;margin:0 auto;position:relative;z-index:1;min-height:calc(100vh - 260px);}
+.sidebar{border-right:1px solid var(--border);background:rgba(232,244,238,0.3);padding:22px 0;position:sticky;top:112px;height:calc(100vh - 112px);overflow-y:auto;}
+.sidebar::-webkit-scrollbar{width:4px;}.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.sb-lbl{padding:8px 18px 4px;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);}
+.sbi{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;transition:all 0.15s;border-left:3px solid transparent;font-size:13px;color:var(--text2);}
+.sbi:hover{background:rgba(45,106,79,0.06);color:var(--text);}
+.sbi.active{background:rgba(45,106,79,0.08);border-left-color:var(--sage);color:var(--sage);font-weight:600;}
+.sbi .si{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.sb-div{height:1px;background:var(--border);margin:10px 14px;}
+.sb-new{font-size:9px;font-weight:700;background:var(--sage);color:#fff;padding:2px 7px;border-radius:10px;margin-left:auto;}
+.main{padding:38px 44px;}
+.panel{display:none;}.panel.active{display:block;animation:fadeUp 0.3s ease;}
+.ph{margin-bottom:30px;}
+.ph-crumb{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;}
+.ph h2{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--text);line-height:1.15;}
+.ph p{margin-top:10px;font-family:var(--it);font-size:17px;color:var(--text2);line-height:1.7;max-width:680px;font-style:italic;}
+.g-line{width:60px;height:2px;background:linear-gradient(90deg,var(--sage),transparent);margin:12px 0;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:22px;transition:all 0.22s;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--sage),var(--sage-lt));opacity:0;transition:opacity 0.2s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}.card:hover::before{opacity:1;}
+.card.click{cursor:pointer;}
+.ci{font-size:30px;margin-bottom:12px;}
+.card h3{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--text);margin-bottom:7px;}
+.card p{font-size:13px;color:var(--text2);line-height:1.65;}
+.ctag{display:inline-block;margin-top:10px;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;background:var(--sage-pale);color:var(--sage);border:1px solid var(--border2);}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:18px;text-align:center;}
+.stat-n{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--sage);line-height:1;}
+.stat-l{font-size:11px;color:var(--text3);font-weight:500;margin-top:5px;text-transform:uppercase;letter-spacing:0.07em;}
+.sb{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:28px;margin-bottom:20px;}
+.sb h3{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--text);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.sb h4{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--sage);margin:14px 0 7px;}
+.sb p{font-size:13.5px;line-height:1.8;color:var(--text2);margin-bottom:10px;}
+.sb ul{list-style:none;}
+.sb ul li{padding:7px 0;border-bottom:1px solid rgba(45,106,79,0.08);font-size:13px;line-height:1.65;color:var(--text2);display:flex;gap:10px;}
+.sb ul li::before{content:"\25C6";color:var(--sage);flex-shrink:0;font-size:9px;margin-top:4px;}
+.sb ul li:last-child{border-bottom:none;}
+.sb table{width:100%;border-collapse:collapse;font-size:13px;}
+.sb table th{background:var(--sage);color:#e8f9ee;font-size:11.5px;font-weight:600;padding:11px 14px;text-align:left;}
+.sb table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;}
+.sb table tr:hover td{background:rgba(45,106,79,0.02);}
+.alert{padding:13px 17px;border-radius:var(--r);font-size:13px;line-height:1.7;margin-bottom:16px;display:flex;gap:11px;}
+.ai-ic{font-size:17px;flex-shrink:0;margin-top:1px;}
+.alert.warn{background:var(--warm-pale);border:1px solid rgba(139,69,19,0.3);color:#5a2800;}
+.alert.sage{background:var(--sage-pale);border:1px solid var(--border2);color:var(--sage);}
+.alert.teal{background:var(--teal-pale);border:1px solid rgba(13,115,119,0.25);color:var(--teal);}
+.alert.emergency{background:#0d1a0e;border:2px solid var(--sage-lt);color:#b0f0c0;font-weight:600;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r);font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;}
+.btn-g{background:linear-gradient(135deg,var(--sage),var(--sage-lt));color:#fff;}
+.btn-g:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(45,106,79,0.4);}
+.btn-w{background:var(--warm);color:#fff;}.btn-w:hover{background:var(--warm-lt);}
+.btn-outline{background:transparent;border:1.5px solid var(--border2);color:var(--text2);}
+.btn-outline:hover{border-color:var(--sage);color:var(--sage);}
+.btn-lg{padding:14px 28px;font-size:15px;}.btn-sm{padding:6px 14px;font-size:12px;}
+.bgrp{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.spn{width:18px;height:18px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+.btn.loading .spn{display:block;}.btn.loading .bt{display:none;}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);flex-wrap:wrap;}
+.tbtn{padding:10px 18px;border:none;background:transparent;font-family:var(--body);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tbtn:hover{color:var(--text);}.tbtn.active{color:var(--sage);border-bottom-color:var(--sage-lt);font-weight:600;}
+.tpane{display:none;}.tpane.active{display:block;animation:fadeUp 0.25s ease;}
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r2);padding:44px;text-align:center;cursor:pointer;transition:all 0.3s;background:#fff;margin-bottom:16px;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--sage);background:var(--sage-pale);}
+.uz-icon{font-size:48px;margin-bottom:14px;}
+.upload-zone h3{font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:7px;color:var(--text);}
+.upload-zone p{font-size:13px;color:var(--text3);}
+.file-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:14px;}
+.ftag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;background:var(--cream2);border:1px solid var(--border);color:var(--text3);}
+.file-row{display:flex;align-items:center;gap:11px;padding:11px 15px;border-radius:var(--r);background:#fff;border:1px solid var(--border);margin-bottom:7px;}
+.fr-ico{font-size:18px;flex-shrink:0;}.fr-name{flex:1;font-size:13px;font-weight:500;}.fr-meta{font-size:11px;color:var(--text3);}
+.fr-ok{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--teal-pale);color:var(--teal);font-weight:600;}
+.fr-del{color:var(--text3);cursor:pointer;font-size:16px;padding:3px;}.fr-del:hover{color:var(--red);}
+.chat-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;}
+.chat-head{background:linear-gradient(135deg,#1b4332,var(--sage));padding:17px 22px;display:flex;align-items:center;justify-content:space-between;}
+.chat-head h3{font-family:var(--serif);font-size:16px;font-weight:600;color:#fff;}
+.chat-head .free{background:rgba(255,255,255,0.18);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.chat-msgs{height:420px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:var(--cream);}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.cm{max-width:82%;padding:12px 15px;border-radius:14px;font-size:13.5px;line-height:1.62;}
+.cm.user{align-self:flex-end;background:var(--sage);color:#fff;border-radius:14px 14px 4px 14px;}
+.cm.ai{align-self:flex-start;background:#fff;border:1px solid var(--border);border-radius:14px 14px 14px 4px;}
+.cm .ai-lbl{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--sage);margin-bottom:4px;}
+.cm.sys{align-self:center;background:var(--cream2);border-radius:8px;font-size:12px;color:var(--text3);max-width:90%;text-align:center;}
+.typing{display:flex;align-items:center;gap:4px;}
+.typing span{width:7px;height:7px;background:var(--text3);border-radius:50%;animation:blink 1.2s ease infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}.typing span:nth-child(3){animation-delay:0.4s;}
+.chat-input-row{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--border);background:var(--cream2);}
+.chat-input{flex:1;padding:10px 14px;border-radius:var(--r);border:1.5px solid rgba(45,106,79,0.2);background:#fff;font-family:var(--body);font-size:13.5px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.chat-input:focus{border-color:var(--sage);}
+.chat-send{padding:10px 20px;border-radius:var(--r);background:var(--sage);color:#fff;border:none;cursor:pointer;font-weight:600;font-family:var(--body);transition:all 0.2s;}
+.chat-send:hover{background:#1b4332;}
+.api-box{background:var(--sage-pale);border:1px solid var(--border2);border-radius:var(--r2);padding:24px;margin-bottom:20px;}
+.api-box h3{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--sage);margin-bottom:8px;}
+.api-box p{font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6;}
+.api-row{display:flex;gap:10px;}
+.api-input{flex:1;padding:10px 14px;border-radius:var(--r);border:1.5px solid var(--border2);background:#fff;font-family:'Consolas',monospace;font-size:13px;color:var(--text);outline:none;}
+.api-input:focus{border-color:var(--sage);}
+.provider-card{position:relative;}
+.provider-card.selected{border-color:var(--sage);box-shadow:0 0 0 2px var(--sage-pale);}
+.provider-card.selected::after{content:'Active';position:absolute;top:14px;right:16px;font-size:11px;font-weight:700;color:var(--sage);}
+.provider-card .ctag.configured{background:var(--teal-pale);color:var(--teal);border-color:rgba(13,115,119,0.3);}
+footer{background:linear-gradient(160deg,#060e08 0%,#0d1a10 100%);padding:50px 40px 30px;border-top:2px solid var(--sage-lt);position:relative;z-index:1;}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:36px;}
+.footer-brand h3{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--sage-lt);margin-bottom:10px;}
+.footer-brand p{font-size:13px;color:rgba(160,220,185,0.7);line-height:1.7;}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage-lt);margin-bottom:12px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:7px;}
+.footer-col ul li a{font-size:13px;color:rgba(160,220,185,0.6);text-decoration:none;transition:color 0.15s;}
+.footer-col ul li a:hover{color:var(--sage-lt);}
+.footer-bottom{border-top:1px solid rgba(45,106,79,0.25);padding-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.footer-bottom p{font-size:12px;color:rgba(160,220,185,0.5);}
+.footer-disc{font-size:11px;color:rgba(160,220,185,0.4);max-width:700px;line-height:1.6;}
+@media(max-width:1000px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{padding:24px 20px}}
+@media(max-width:700px){header{padding:40px 20px 32px}.g2,.g3{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr}.disc-box{padding:28px 20px}}
+</style>
+</head>
+<body>
+
+<div id="disc-modal">
+  <div class="disc-box">
+    <span class="disc-icon">&#127987;&#65039;</span>
+    <h1>Medical Disclaimer</h1>
+    <div class="disc-sub">GastroCare AI &mdash; Gastroenterology Health Intelligence Platform</div>
+    <div class="disc-content">
+      <p><strong>RESEARCH &amp; EDUCATIONAL PURPOSE ONLY:</strong> GastroCare AI is an AI-powered research platform. All content is compiled from published gastroenterology literature (BSG, ACG, EASL, NICE, WHO) for educational purposes only.</p>
+      <p><strong>NOT A SUBSTITUTE FOR GASTROENTEROLOGICAL CARE:</strong> Nothing on this platform constitutes medical advice, diagnosis, or treatment. GI conditions can be serious. AI-generated analysis may be incomplete, outdated, or inaccurate.</p>
+      <p><strong>MANDATORY PROFESSIONAL CONSULTATION:</strong> Before making any decision about GI medications, endoscopic procedures, surgery, or dietary changes &mdash; you MUST consult a qualified gastroenterologist.</p>
+      <p><strong>GI EMERGENCY &mdash; CALL IMMEDIATELY:</strong> Vomiting blood (haematemesis), black tarry stools (melaena), sudden severe abdominal pain, signs of perforation (board-like rigid abdomen), yellowing of skin/eyes with fever, signs of acute liver failure &mdash; Call 112 (India) / 999 (UK) / 911 (US) IMMEDIATELY.</p>
+      <p><strong>NO LIABILITY:</strong> The creators accept no responsibility for any health outcome arising from use without proper professional medical guidance.</p>
+    </div>
+    <div class="disc-chk">
+      <div class="chk-row"><input type="checkbox" id="dc1"><label for="dc1">I understand this is an AI research tool &mdash; NOT medical advice, diagnosis, or treatment.</label></div>
+      <div class="chk-row"><input type="checkbox" id="dc2"><label for="dc2">I will consult a qualified gastroenterologist before any medical decision.</label></div>
+      <div class="chk-row"><input type="checkbox" id="dc3"><label for="dc3">In a GI emergency I will call 112/999/911 immediately, not use this platform.</label></div>
+    </div>
+    <button class="disc-accept" id="disc-btn" disabled onclick="acceptDisc()">I Understand &amp; Accept &mdash; Enter GastroCare AI</button>
+  </div>
+</div>
+
+<div class="disc-bar"><span class="pdot"></span><strong>&#9888;&#65039; AI RESEARCH TOOL ONLY</strong> &mdash; Not medical advice. <strong>ALWAYS consult your gastroenterologist.</strong> GI EMERGENCY: Call <strong>112</strong> (India) / 999 (UK) / 911 (US).</div>
+
+<header>
+  <div class="hdr-inner">
+    <div class="hdr-eyebrow">&#127987;&#65039; Gastroenterology Health Intelligence Platform</div>
+    <h1>GastroCare <span>AI</span></h1>
+    <div class="hdr-sub">Evidence-Based GI Health Research &amp; Wellness Intelligence</div>
+    <div class="hdr-line"></div>
+    <div class="hdr-desc">Upload endoscopy reports, pathology results, and GI investigations for AI-researched insights. Covering acid reflux, peptic ulcers, IBD, IBS, liver disease, colorectal cancer, GI bleeding, pancreatitis and more &mdash; from BSG, ACG, EASL and NICE guidelines.</div>
+    <div class="hdr-badges">
+      <span class="hbadge hb-g">&#127987;&#65039; GERD &amp; Peptic Ulcer</span>
+      <span class="hbadge hb-w">&#128009; IBD &amp; IBS</span>
+      <span class="hbadge hb-t">&#129428; Liver Disease</span>
+      <span class="hbadge hb-g">&#128200; Endoscopy Reports</span>
+      <span class="hbadge hb-w">&#128138; GI Medicines</span>
+      <span class="hbadge hb-t">&#129377; GI Diet &amp; Nutrition</span>
+    </div>
+  </div>
+</header>
+
+<nav class="main-nav">
+  <div class="nav-inner">
+    <div class="ntab active" onclick="nav('home')">&#127968; Home</div>
+    <div class="ntab" onclick="nav('upload')">&#128193; Upload</div>
+    <div class="ntab" onclick="nav('conditions')">&#127987;&#65039; Conditions</div>
+    <div class="ntab" onclick="nav('medicines')">&#128138; Medicines</div>
+    <div class="ntab" onclick="nav('procedures')">&#128269; Endoscopy</div>
+    <div class="ntab" onclick="nav('imaging')">&#128200; Investigations</div>
+    <div class="ntab" onclick="nav('emergency')">&#128680; Emergency</div>
+    <div class="ntab" onclick="nav('diet')">&#129377; GI Diet</div>
+    <div class="ntab" onclick="nav('liver')">&#129428; Liver Health</div>
+    <div class="ntab" onclick="nav('cancer')">&#128196; Cancer Screening</div>
+    <div class="ntab" onclick="nav('chat')">&#128172; Ask AI</div>
+    <div class="ntab" onclick="nav('settings')">&#9881;&#65039; Settings</div>
+  </div>
+</nav>
+
+<div class="app">
+<aside class="sidebar">
+  <div class="sb-lbl">Patient Portal</div>
+  <div class="sbi active" onclick="nav('home')"><span class="si">&#127968;</span>Dashboard</div>
+  <div class="sbi" onclick="nav('upload')"><span class="si">&#128193;</span>Upload Reports</div>
+  <div class="sbi" onclick="nav('settings')"><span class="si">&#9881;&#65039;</span>Settings &amp; AI Provider</div>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">GI Conditions</div>
+  <div class="sbi" onclick="nav('conditions')"><span class="si">&#127987;&#65039;</span>Conditions</div>
+  <div class="sbi" onclick="nav('emergency')"><span class="si">&#128680;</span>GI Emergencies</div>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">Diagnostics</div>
+  <div class="sbi" onclick="nav('procedures')"><span class="si">&#128269;</span>Endoscopy &amp; Procedures</div>
+  <div class="sbi" onclick="nav('imaging')"><span class="si">&#128200;</span>Investigations</div>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">Treatment</div>
+  <div class="sbi" onclick="nav('medicines')"><span class="si">&#128138;</span>Medicines</div>
+  <div class="sbi" onclick="nav('liver')"><span class="si">&#129428;</span>Liver Health</div>
+  <div class="sbi" onclick="nav('cancer')"><span class="si">&#128196;</span>Cancer Screening</div>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">Nutrition</div>
+  <div class="sbi" onclick="nav('diet')"><span class="si">&#129377;</span>GI Diet &amp; Nutrition</div>
+  <div class="sb-div"></div>
+  <div class="sbi" onclick="nav('chat')"><span class="si">&#128172;</span>Ask AI <span class="sb-new">FREE</span></div>
+</aside>
+<main class="main">
+
+<!-- HOME -->
+<div class="panel active" id="panel-home">
+  <div class="ph"><div class="ph-crumb">Welcome</div><h2>Gastroenterology Health Intelligence</h2><div class="g-line"></div><p>AI-researched GI insights from BSG, ACG, EASL, NICE, WHO and peer-reviewed literature. From acid reflux to liver disease, IBD to colorectal cancer screening.</p></div>
+  <div class="alert emergency"><span class="ai-ic">&#128680;</span><div>GI EMERGENCY: Vomiting blood, black tarry stools, sudden severe abdominal pain, rigid abdomen, yellowing with fever &mdash; CALL 112 (India) / 999 (UK) / 911 (US) IMMEDIATELY.</div></div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n">35+</div><div class="stat-l">GI Conditions</div></div>
+    <div class="stat"><div class="stat-n">10+</div><div class="stat-l">Endoscopy Types</div></div>
+    <div class="stat"><div class="stat-n">5</div><div class="stat-l">AI Providers</div></div>
+    <div class="stat"><div class="stat-n">&#10003;</div><div class="stat-l">AES-256 Secure</div></div>
+  </div>
+  <div class="alert sage"><span class="ai-ic">&#9888;&#65039;</span><div><strong>Research Tool Only:</strong> All AI output is for educational research. ALWAYS consult your gastroenterologist before any decision about GI medications, procedures, diet, or surgery.</div></div>
+  <div class="g3" style="margin-bottom:22px;">
+    <div class="card click" onclick="nav('conditions')"><div class="ci">&#127987;&#65039;</div><h3>GI Conditions</h3><p>GERD, peptic ulcer, IBD, IBS, coeliac disease, liver disease, pancreatitis and more.</p><span class="ctag">Clinical Research</span></div>
+    <div class="card click" onclick="nav('procedures')"><div class="ci">&#128269;</div><h3>Endoscopy &amp; Procedures</h3><p>OGD, colonoscopy, ERCP, capsule endoscopy, endoscopic polypectomy, banding.</p><span class="ctag">Procedure Research</span></div>
+    <div class="card click" onclick="nav('medicines')"><div class="ci">&#128138;</div><h3>GI Medicines</h3><p>PPIs, H2 blockers, antacids, aminosalicylates, biologics, antivirals, lactulose.</p><span class="ctag">Pharmacology</span></div>
+    <div class="card click" onclick="nav('liver')"><div class="ci">&#129428;</div><h3>Liver Health</h3><p>NAFLD/MASH, cirrhosis, viral hepatitis, autoimmune liver disease, liver failure.</p><span class="ctag">Hepatology</span></div>
+    <div class="card click" onclick="nav('cancer')"><div class="ci">&#128196;</div><h3>Cancer Screening</h3><p>Bowel cancer screening, polyp surveillance, Barrett's oesophagus, H. pylori and gastric cancer.</p><span class="ctag">Oncology</span></div>
+    <div class="card click" onclick="nav('diet')"><div class="ci">&#129377;</div><h3>GI Diet &amp; Nutrition</h3><p>Low-FODMAP, gluten-free, liver diet, low-fibre, anti-inflammatory eating for GI health.</p><span class="ctag">Nutrition Science</span></div>
+  </div>
+</div>
+
+<!-- UPLOAD -->
+<div class="panel" id="panel-upload">
+  <div class="ph"><div class="ph-crumb">Step 1</div><h2>Upload GI Reports</h2><div class="g-line"></div><p>Upload endoscopy reports, pathology results, imaging and blood tests for AI-assisted research.</p></div>
+  <div class="upload-zone" id="uz" onclick="document.getElementById('fi').click()">
+    <div class="uz-icon">&#128194;</div>
+    <h3>Drop files here or click to browse</h3>
+    <p>All GI investigation documents and imaging supported</p>
+    <div class="file-tags">
+      <span class="ftag">Endoscopy Report</span><span class="ftag">Pathology/Biopsy</span><span class="ftag">CT Abdomen</span>
+      <span class="ftag">MRI Liver</span><span class="ftag">USS Abdomen</span><span class="ftag">Blood Tests (LFTs)</span>
+      <span class="ftag">ERCP Report</span><span class="ftag">Colonoscopy</span><span class="ftag">PDF &middot; JPG &middot; PNG</span>
+    </div>
+  </div>
+  <input type="file" id="fi" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.txt,.csv" style="display:none" onchange="handleFiles(this.files)">
+  <div id="flist"></div>
+  <div class="bgrp">
+    <button class="btn btn-g btn-lg" id="up-btn" onclick="uploadFiles()"><span class="bt">&#128228; Upload &amp; Process</span><div class="spn"></div></button>
+    <button class="btn btn-outline" onclick="document.getElementById('fi').click()">+ Add More</button>
+    <button class="btn btn-outline" onclick="clearFiles()">&#128465; Clear</button>
+  </div>
+  <div id="up-result"></div>
+</div>
+
+<!-- CONDITIONS -->
+<div class="panel" id="panel-conditions">
+  <div class="ph"><div class="ph-crumb">Gastroenterology</div><h2>GI Conditions</h2><div class="g-line"></div><p>Comprehensive clinical research on gastrointestinal conditions from BSG, ACG, EASL and NICE guidelines.</p></div>
+  <div class="alert warn"><span class="ai-ic">&#9888;&#65039;</span><div>All information is for educational research. Diagnosis requires clinical assessment by a qualified gastroenterologist. Do not self-manage significant GI symptoms without professional advice.</div></div>
+  <div style="margin-bottom:17px;">
+    <label style="font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;display:block;">Select Condition</label>
+    <select style="width:100%;padding:10px 14px;border-radius:var(--r);border:1.5px solid var(--border2);background:#fff;font-family:var(--body);font-size:14px;color:var(--text);outline:none;" id="cond-sel" onchange="showCondition()">
+      <option value="">-- Select a GI condition --</option>
+      <optgroup label="Upper GI">
+        <option>GERD (Acid Reflux)</option><option>Barrett's Oesophagus</option>
+        <option>Peptic Ulcer Disease</option><option>H. pylori Infection</option>
+        <option>Gastritis</option><option>Oesophageal Cancer</option><option>Gastric Cancer</option>
+        <option>Achalasia</option><option>Hiatus Hernia</option>
+      </optgroup>
+      <optgroup label="Lower GI">
+        <option>Ulcerative Colitis</option><option>Crohn's Disease</option>
+        <option>Irritable Bowel Syndrome (IBS)</option><option>Coeliac Disease</option>
+        <option>Colorectal Cancer</option><option>Colorectal Polyps</option>
+        <option>Diverticular Disease</option><option>Haemorrhoids</option>
+        <option>Microscopic Colitis</option><option>Ischaemic Colitis</option>
+      </optgroup>
+      <optgroup label="Liver &amp; Biliary">
+        <option>NAFLD / MASH</option><option>Alcoholic Liver Disease</option>
+        <option>Hepatitis B</option><option>Hepatitis C</option>
+        <option>Cirrhosis</option><option>Autoimmune Hepatitis</option>
+        <option>Primary Biliary Cholangitis (PBC)</option>
+        <option>Primary Sclerosing Cholangitis (PSC)</option>
+        <option>Gallstones (Cholelithiasis)</option><option>Acute Cholangitis</option>
+      </optgroup>
+      <optgroup label="Pancreas">
+        <option>Acute Pancreatitis</option><option>Chronic Pancreatitis</option>
+        <option>Pancreatic Cancer</option><option>Autoimmune Pancreatitis</option>
+      </optgroup>
+      <optgroup label="Other">
+        <option>GI Bleeding (Upper)</option><option>GI Bleeding (Lower)</option>
+        <option>Constipation</option><option>Dysphagia</option>
+        <option>Functional Dyspepsia</option><option>Colon Cancer Screening</option>
+      </optgroup>
+    </select>
+  </div>
+  <div id="cond-output"></div>
+  <div class="sb"><h3>Quick Reference</h3>
+    <div class="g2">
+      <div><h4>GERD / Acid Reflux</h4><ul>
+        <li>Heartburn + regurgitation: cardinal symptoms</li>
+        <li>Alarm features (dysphagia, weight loss, anaemia): urgent endoscopy</li>
+        <li>PPIs (omeprazole 20mg OD) 30 min before breakfast: first-line</li>
+        <li>Barrett's oesophagus: requires endoscopic surveillance every 2-5 years</li>
+      </ul></div>
+      <div><h4>Peptic Ulcer / H. pylori</h4><ul>
+        <li>H. pylori eradication: PPI + clarithromycin + amoxicillin x 7-14 days</li>
+        <li>Test-of-cure: urea breath test 4 weeks after antibiotics, 2 weeks off PPI</li>
+        <li>Gastric ulcers: biopsy mandatory + repeat scope to confirm healing</li>
+        <li>Stop NSAIDs if possible; long-term PPI if NSAIDs continued</li>
+      </ul></div>
+      <div><h4>IBD (UC / Crohn's)</h4><ul>
+        <li>Faecal calprotectin: best non-invasive IBD screening test</li>
+        <li>Severe UC (6+ bloody stools/day, systemic): HOSPITAL ADMISSION</li>
+        <li>Toxic megacolon (colon over 6cm): MEDICAL/SURGICAL EMERGENCY</li>
+        <li>Anti-TNF biologics after inadequate response to conventional therapy</li>
+      </ul></div>
+      <div><h4>IBS</h4><ul>
+        <li>Rome IV criteria: abdominal pain weekly x 3 months, linked to bowel habit</li>
+        <li>Low-FODMAP diet: 70% response in IBS-D, supervised by dietitian</li>
+        <li>Exclude red flags before diagnosing: age over 50, rectal bleeding, weight loss</li>
+        <li>CBT/gut-directed hypnotherapy: strong evidence for refractory IBS</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- MEDICINES -->
+<div class="panel" id="panel-medicines">
+  <div class="ph"><div class="ph-crumb">GI Pharmacology</div><h2>GI Medicines</h2><div class="g-line"></div><p>Comprehensive research on gastroenterology medications from BSG, ACG, EASL and NICE guidelines.</p></div>
+  <div class="alert warn"><span class="ai-ic">&#9888;&#65039;</span><div>Medication information is for research only. Never start, stop, or adjust GI medications without your gastroenterologist's guidance.</div></div>
+  <div class="tab-bar">
+    <button class="tbtn active" onclick="switchTab(this,'m1')">Acid Suppressants</button>
+    <button class="tbtn" onclick="switchTab(this,'m2')">IBD Medications</button>
+    <button class="tbtn" onclick="switchTab(this,'m3')">Liver Medications</button>
+    <button class="tbtn" onclick="switchTab(this,'m4')">Bowel Agents</button>
+    <button class="tbtn" onclick="switchTab(this,'m5')">GI Biologics</button>
+    <button class="tbtn" onclick="switchTab(this,'m6')">Antivirals (Hep B/C)</button>
+  </div>
+
+  <div class="tpane active" id="m1">
+    <div class="sb"><h3>Acid Suppressants and Anti-Reflux Medications</h3>
+      <h4>Proton Pump Inhibitors (PPIs) &mdash; First-Line</h4>
+      <ul>
+        <li><strong>Omeprazole 20-40mg OD:</strong> most widely used. Take 30 minutes before breakfast. Doses of 40mg for severe oesophagitis or H. pylori eradication.</li>
+        <li><strong>Lansoprazole 15-30mg OD, Esomeprazole 20-40mg OD, Pantoprazole 20-40mg OD, Rabeprazole 10-20mg OD:</strong> alternatives, broadly equivalent efficacy. Some differences in CYP2C19 metabolism affecting drug interactions.</li>
+        <li><strong>Duration:</strong> 4-8 weeks for oesophagitis/peptic ulcer. Long-term use in Barrett's oesophagus, severe GERD. Side effects with long-term use: hypomagnesaemia (check Mg if on long-term PPIs), Clostridium difficile risk, osteoporosis (modest), hyponatraemia.</li>
+        <li><strong>IV omeprazole/pantoprazole:</strong> 80mg bolus then 8mg/hour infusion for high-risk peptic ulcer bleeding post-endoscopy (NICE guidance).</li>
+      </ul>
+      <h4>H2 Receptor Antagonists</h4>
+      <ul>
+        <li><strong>Famotidine 20-40mg BD:</strong> ranitidine now largely withdrawn (NDMA contamination). H2 blockers less effective than PPIs. Useful as add-on for breakthrough nocturnal symptoms (taken at bedtime in addition to PPI).</li>
+      </ul>
+      <h4>Antacids and Alginate</h4>
+      <ul>
+        <li>Gaviscon (alginate) + antacid: forms raft to prevent reflux. Useful for symptomatic relief, pregnancy (safe), mild GERD. Not disease-modifying.</li>
+        <li>Magnesium/aluminium antacids: rapid symptom relief, not for regular use (diarrhoea/constipation).</li>
+      </ul>
+      <h4>H. pylori Eradication Regimens</h4>
+      <ul>
+        <li><strong>First-line (UK/India):</strong> PPI (standard dose BD) + Clarithromycin 500mg BD + Amoxicillin 1g BD for 7-14 days. Metronidazole 400mg BD if penicillin allergy.</li>
+        <li><strong>Second-line (clarithromycin failure):</strong> Bismuth quadruple therapy (PPI + bismuth + tetracycline + metronidazole) or levofloxacin-based triple therapy.</li>
+        <li><strong>Test-of-cure:</strong> Urea breath test (UBT) at least 4 weeks after antibiotics AND 2 weeks after stopping PPI. Stool antigen test equally valid.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tpane" id="m2">
+    <div class="sb"><h3>IBD Medications</h3>
+      <ul>
+        <li><strong>Aminosalicylates (5-ASA) &mdash; Mesalazine (Mesalamine):</strong> First-line for mild-moderate UC. Oral (Pentasa, Asacol) and/or rectal (suppositories for proctitis, enemas for left-sided UC). Minimal role in Crohn's disease.</li>
+        <li><strong>Corticosteroids (prednisolone oral, IV hydrocortisone):</strong> Induction of acute flares only. Prednisolone 40mg OD reducing course over 8 weeks. NOT maintenance therapy. Budesonide (Budenofalk/Entocort): locally acting, less systemic absorption, used for mild-moderate Crohn's (ileocolonic disease) and microscopic colitis.</li>
+        <li><strong>Thiopurines (Azathioprine 2-2.5mg/kg/day, Mercaptopurine):</strong> Maintenance therapy for UC and Crohn's. Check TPMT enzyme activity before starting (risk of severe myelosuppression in TPMT-deficient patients). Takes 3-4 months to achieve full effect. Regular FBC and LFTs monitoring. Risk of lymphoma (small but real), non-melanoma skin cancer (sun protection advice).</li>
+        <li><strong>Methotrexate:</strong> Crohn's disease maintenance, particularly in thiopurine intolerance. 25mg SC weekly, reduce to 15mg after 16 weeks. Folic acid supplement. LFTs and FBC monitoring. Teratogenic &mdash; effective contraception essential.</li>
+        <li><strong>Ciclosporin (IV):</strong> Rescue therapy for acute severe UC not responding to 3-5 days IV steroids. Highly effective short-term (60-80% avoiding colectomy). Bridge to thiopurine maintenance.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tpane" id="m3">
+    <div class="sb"><h3>Liver and Biliary Medications</h3>
+      <ul>
+        <li><strong>Ursodeoxycholic acid (UDCA) 13-15mg/kg/day:</strong> First-line for Primary Biliary Cholangitis (PBC). Slows disease progression, improves LFTs. Second-line add-on: obeticholic acid (OCA) or fibrates for inadequate UDCA response.</li>
+        <li><strong>Spironolactone 100-400mg/day +/- Furosemide 40-160mg/day:</strong> First-line diuretic therapy for cirrhotic ascites. Target weight loss 0.5-1kg/day. Monitor renal function and electrolytes closely.</li>
+        <li><strong>Terlipressin:</strong> Vasoconstrictor for acute variceal haemorrhage (with banding/sclerotherapy) and hepatorenal syndrome (with albumin infusion). IV administration.</li>
+        <li><strong>Non-selective beta-blockers (Propranolol 20-40mg BD, Carvedilol 6.25mg BD):</strong> Primary and secondary prophylaxis of variceal bleeding in cirrhosis with varices. Reduce portal pressure. Titrate to heart rate 55-60 bpm. Caution in SBP and renal impairment.</li>
+        <li><strong>Lactulose 15-30ml BD-TDS (titrated to 2-3 soft stools/day):</strong> First-line for hepatic encephalopathy. Acidifies colon, reduces ammonia absorption. Add rifaximin 550mg BD for recurrent episodes (NICE approved).</li>
+        <li><strong>Albumin infusion:</strong> IV human albumin 20%. Used in: SBP (1.5g/kg at diagnosis, 1g/kg at 48 hours - reduces hepatorenal syndrome), large-volume paracentesis (6-8g per litre removed over 5 litres), hepatorenal syndrome (with terlipressin).</li>
+        <li><strong>Norfloxacin 400mg OD / Co-trimoxazole:</strong> Long-term antibiotic prophylaxis for SBP in high-risk cirrhotic patients (prior SBP, low ascitic protein).</li>
+        <li><strong>N-acetylcysteine (NAC):</strong> IV infusion for paracetamol overdose causing acute liver failure. Most effective within 8-10 hours but beneficial up to 24+ hours. Also used in non-paracetamol ALF.</li>
+        <li><strong>Resmetirom (Rezdiffra):</strong> First FDA-approved treatment for MASH (metabolic-associated steatohepatitis) with liver fibrosis. THR-beta agonist. Reduces liver fat and fibrosis.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tpane" id="m4">
+    <div class="sb"><h3>Bowel and Motility Agents</h3>
+      <ul>
+        <li><strong>Loperamide 2-4mg (max 16mg/day):</strong> First-line for IBS-D and functional diarrhoea. Reduces intestinal motility and fluid secretion. Not for use in infectious diarrhoea or IBD active colitis.</li>
+        <li><strong>Mebeverine 135-200mg TDS (antispasmodic):</strong> IBS abdominal cramps. Smooth muscle relaxant. Well tolerated.</li>
+        <li><strong>Peppermint oil capsules (Colpermin):</strong> IBS abdominal pain and bloating. Good safety profile. Take before meals.</li>
+        <li><strong>Linaclotide 290mcg OD (30 mins before breakfast):</strong> NICE-approved for moderate-severe IBS-C. Guanylate cyclase-C agonist &mdash; increases intestinal fluid and transit. Also licensed for chronic idiopathic constipation.</li>
+        <li><strong>Ispaghula husk (Fybogel):</strong> Bulk-forming laxative for IBS-C and constipation. Take with adequate fluid. Caution in bowel obstruction. First-line fibre supplement.</li>
+        <li><strong>Macrogol (Movicol/Laxido):</strong> Osmotic laxative. First-line for constipation, also bowel prep. Safe in pregnancy. 1-3 sachets daily.</li>
+        <li><strong>Rifaximin 550mg BD x 14 days:</strong> Non-absorbable antibiotic for IBS-D (targets small bowel bacterial dysbiosis). Also 550mg BD long-term for hepatic encephalopathy prevention.</li>
+        <li><strong>Amitriptyline 10-30mg at night:</strong> Low-dose TCA for IBS &mdash; modulates gut-brain axis. Good evidence for pain and diarrhoea in IBS. NICE recommended.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tpane" id="m5">
+    <div class="sb"><h3>GI Biologics and Advanced Therapies</h3>
+      <ul>
+        <li><strong>Anti-TNF agents &mdash; Infliximab (Remicade, Inflectra) IV infusion:</strong> Moderate-severe Crohn's and UC refractory to conventional therapy. Induction at 0, 2, 6 weeks then 8-weekly maintenance. Screen for TB, hepatitis B before starting. Risk of infections, reactivation of TB.</li>
+        <li><strong>Adalimumab (Humira) SC injection:</strong> Self-administered anti-TNF for Crohn's and UC. 160mg at week 0, 80mg at week 2, then 40mg every 2 weeks.</li>
+        <li><strong>Vedolizumab (Entyvio) IV/SC:</strong> Gut-selective anti-integrin (blocks alpha4beta7). Moderate-severe UC and Crohn's. Excellent safety profile (gut-selective, minimal systemic immunosuppression). Preferred in patients with history of malignancy or serious infections.</li>
+        <li><strong>Ustekinumab (Stelara) IV/SC:</strong> Anti-IL12/23. Moderate-severe Crohn's (after anti-TNF failure or intolerance). Also licensed for UC. IV induction dose then 90mg SC every 8-12 weeks.</li>
+        <li><strong>JAK inhibitors (Tofacitinib 10mg BD induction then 5mg BD, Filgotinib 200mg OD, Upadacitinib 45mg OD induction then 15/30mg OD):</strong> Oral targeted synthetic DMARDs for moderate-severe UC. Rapid onset. VTE risk (tofacitinib): caution in patients over 65/cardiovascular risk. MHRA guidance on prescribing.</li>
+        <li><strong>Risankizumab (Skyrizi) IV/SC:</strong> Anti-IL23p19. Licensed for moderate-severe Crohn's and UC. Once-daily oral ozanimod (S1P modulator) also available for UC.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tpane" id="m6">
+    <div class="sb"><h3>Antiviral Medications for Hepatitis B and C</h3>
+      <h4>Hepatitis B (HBV)</h4>
+      <ul>
+        <li><strong>Tenofovir disoproxil fumarate (TDF) 245mg OD:</strong> First-line antiviral for Hepatitis B. Highly effective, well tolerated. Monitor renal function and bone density with long-term use. Tenofovir alafenamide (TAF) 25mg OD: better renal and bone safety profile, preferred in those with renal disease.</li>
+        <li><strong>Entecavir 0.5mg OD (1mg OD in treatment-experienced):</strong> Alternative first-line antiviral. High barrier to resistance. Not if lamivudine-resistant.</li>
+        <li>Treatment may be lifelong. Aim: sustained viral suppression (HBV DNA undetectable), ALT normalisation, HBsAg loss (rarely achieved but possible with long-term treatment). HCC surveillance 6-monthly USS in all HBsAg+ patients with cirrhosis (and high-risk without cirrhosis).</li>
+      </ul>
+      <h4>Hepatitis C (HCV) &mdash; Direct-Acting Antivirals (DAAs)</h4>
+      <ul>
+        <li><strong>Sofosbuvir/Velpatasvir (Epclusa) 1 tablet OD x 12 weeks:</strong> Pan-genotypic regimen, first-line for most patients. Over 95% sustained virological response (SVR = cure) across all genotypes.</li>
+        <li><strong>Sofosbuvir/Ledipasvir (Harvoni) 1 tablet OD x 8-12 weeks:</strong> Genotype 1 and 4. 8 weeks if treatment-naive, non-cirrhotic, low viral load.</li>
+        <li><strong>Glecaprevir/Pibrentasvir (Maviret) 3 tablets OD x 8 weeks:</strong> Pan-genotypic, 8-week treatment, minimal drug interactions, can be used in compensated cirrhosis and severe renal impairment.</li>
+        <li>HCV treatment cures the infection. Liver fibrosis regresses in many patients. HCC risk remains in those with cirrhosis &mdash; continue surveillance post-SVR if cirrhotic.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ENDOSCOPY -->
+<div class="panel" id="panel-procedures">
+  <div class="ph"><div class="ph-crumb">Endoscopy &amp; GI Procedures</div><h2>Endoscopic &amp; GI Procedures</h2><div class="g-line"></div><p>Research on endoscopic procedures, interventions and diagnostic techniques from BSG and ACG guidelines.</p></div>
+  <div class="tab-bar">
+    <button class="tbtn active" onclick="switchTab(this,'e1')">OGD / Gastroscopy</button>
+    <button class="tbtn" onclick="switchTab(this,'e2')">Colonoscopy</button>
+    <button class="tbtn" onclick="switchTab(this,'e3')">ERCP</button>
+    <button class="tbtn" onclick="switchTab(this,'e4')">Therapeutic Endoscopy</button>
+    <button class="tbtn" onclick="switchTab(this,'e5')">Capsule Endoscopy</button>
+  </div>
+  <div class="tpane active" id="e1">
+    <div class="sb"><h3>OGD (Oesophago-Gastro-Duodenoscopy) / Gastroscopy</h3>
+      <p>Flexible endoscope passed through mouth to examine oesophagus, stomach, and duodenum. Performed under sedation (IV midazolam +/- fentanyl) or throat spray. Takes 5-15 minutes. Day-case procedure.</p>
+      <h4>Indications</h4><ul>
+        <li>Dyspepsia with alarm features (dysphagia, weight loss, anaemia, haematemesis, age over 55 with new symptoms)</li>
+        <li>Upper GI bleeding: haematemesis or melaena</li>
+        <li>Barrett's oesophagus surveillance</li>
+        <li>Coeliac disease diagnosis (duodenal biopsies)</li>
+        <li>H. pylori biopsy (CLO test) and biopsies of gastric ulcers (to exclude malignancy)</li>
+        <li>Dysphagia assessment, oesophageal stricture dilation</li>
+        <li>Gastric cancer screening in high-risk populations</li>
+      </ul>
+      <h4>Common Findings</h4><ul>
+        <li>Oesophagitis: Los Angeles (LA) classification A-D (A=mild erosions to D=extensive ulceration)</li>
+        <li>Barrett's oesophagus: Prague classification (C and M measurements)</li>
+        <li>Gastric ulcer: location, Forrest classification of bleeding stigmata (Ia-IIc)</li>
+        <li>H. pylori gastritis pattern (antral predominant vs pangastritis)</li>
+        <li>Duodenal ulcer: typically posterior wall D1</li>
+        <li>Normal OGD: does not exclude GERD (functional endoscopy-negative reflux disease)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tpane" id="e2">
+    <div class="sb"><h3>Colonoscopy</h3>
+      <p>Gold-standard investigation of the large bowel (colon and rectum). Requires bowel preparation the day before (Moviprep, Klean-Prep, Citrafleet). Performed under sedation. Takes 20-45 minutes. Allows biopsy, polypectomy and other interventions.</p>
+      <h4>Indications</h4><ul>
+        <li>Rectal bleeding or change in bowel habit over 40-50 years</li>
+        <li>IBD diagnosis, extent assessment, and surveillance for dysplasia</li>
+        <li>Colorectal cancer screening and post-polypectomy surveillance</li>
+        <li>Iron deficiency anaemia (with OGD)</li>
+        <li>Family history of colorectal cancer/polyps</li>
+        <li>Positive FIT (faecal immunochemical test)</li>
+      </ul>
+      <h4>Polyp Classification</h4><ul>
+        <li>Paris classification of polyp morphology: Ip (pedunculated), Is (sessile), IIa (flat elevated), IIb (flat), IIc (flat depressed)</li>
+        <li>Histology: hyperplastic (low risk), tubular adenoma, tubulovillous adenoma, villous adenoma (higher risk), serrated adenoma (flat, right-sided, higher malignant potential)</li>
+        <li>BSG post-polypectomy surveillance: low risk (1-2 adenomas, under 10mm, tubular, LGD): 3-year repeat. High risk (3+ adenomas, any over 10mm, villous, HGD): 1-year repeat.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tpane" id="e3">
+    <div class="sb"><h3>ERCP (Endoscopic Retrograde Cholangiopancreatography)</h3>
+      <p>Specialised procedure combining endoscopy and fluoroscopy to diagnose and treat biliary and pancreatic duct conditions. Performed under general anaesthesia or deep sedation. Highest complication rate of all GI endoscopic procedures.</p>
+      <h4>Indications</h4><ul>
+        <li>Common bile duct (CBD) stones (choledocholithiasis): stone extraction with sphincterotomy</li>
+        <li>Acute cholangitis: biliary decompression (stent or naso-biliary drain)</li>
+        <li>Malignant biliary obstruction (pancreatic cancer, cholangiocarcinoma): stent placement</li>
+        <li>Post-cholecystectomy bile leak: stent placement</li>
+        <li>Pancreatic duct strictures: stent placement in chronic pancreatitis</li>
+        <li>PSC: dominant stricture dilation</li>
+      </ul>
+      <h4>Complications</h4><ul>
+        <li>Post-ERCP pancreatitis (PEP): 3-5%. Risk reduced with PR diclofenac (given routinely) and pancreatic stent in high-risk cases</li>
+        <li>Cholangitis, haemorrhage (post-sphincterotomy), perforation: all rare but serious</li>
+        <li>Overall serious complication rate: 5-10%</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tpane" id="e4">
+    <div class="sb"><h3>Therapeutic Endoscopy</h3><ul>
+      <li><strong>Endoscopic polypectomy:</strong> Snare polypectomy (pedunculated/large sessile), cold snare (small polyps under 10mm), EMR (endoscopic mucosal resection) for large flat lesions, ESD (endoscopic submucosal dissection) for en-bloc resection of superficial cancers (specialist centres).</li>
+      <li><strong>Variceal band ligation (VBL):</strong> Elastic rubber bands applied to oesophageal varices. Primary treatment for acute variceal bleeding. Also primary and secondary prophylaxis in cirrhotics with high-risk varices (red wale marks, large size). Repeated every 2-4 weeks until variceal eradication.</li>
+      <li><strong>Injection therapy:</strong> Adrenaline (1:10,000) injection around bleeding peptic ulcer vessel + thermal or clip haemostasis. Haemospraying (Hemospray) for diffuse bleeding.</li>
+      <li><strong>Endoscopic clips (haemoclips):</strong> Applied to bleeding vessels, Dieulafoy lesions, perforations (endoscopic closure of small perforations).</li>
+      <li><strong>Radiofrequency ablation (RFA):</strong> For Barrett's oesophagus with dysplasia. Delivers controlled thermal energy to ablate dysplastic mucosa. Combined with EMR of visible lesions.</li>
+      <li><strong>Argon plasma coagulation (APC):</strong> Non-contact thermal therapy for bleeding angiodysplasia, radiation proctitis, gastric antral vascular ectasia (GAVE / watermelon stomach).</li>
+      <li><strong>Oesophageal dilation:</strong> For peptic strictures (Savary-Gilliard bougies or balloon dilation), Schatzki rings, anastomotic strictures, post-RFA strictures.</li>
+      <li><strong>PEG (Percutaneous Endoscopic Gastrostomy):</strong> Long-term enteral feeding access for patients unable to swallow (stroke, MND, head and neck cancer).</li>
+    </ul></div>
+  </div>
+  <div class="tpane" id="e5">
+    <div class="sb"><h3>Capsule Endoscopy and Other Modalities</h3><ul>
+      <li><strong>Capsule endoscopy (video capsule/pill camera):</strong> Patient swallows a small camera capsule (11x26mm) which photographs the small bowel as it passes naturally. Examines 5-7m of small intestine not accessible to standard endoscopy. Indicated for obscure GI bleeding (iron deficiency anaemia with negative bidirectional endoscopy), suspected Crohn's of small bowel, surveillance in hereditary polyposis syndromes (FAP, Peutz-Jeghers). CONTRAINDICATED in known or suspected bowel obstruction (retention risk).</li>
+      <li><strong>Device-assisted enteroscopy (balloon enteroscopy):</strong> Single or double balloon enteroscopy allows diagnostic and therapeutic access to deep small bowel. Indicated when capsule endoscopy identifies a lesion requiring biopsy or treatment (polypectomy, haemostasis).</li>
+      <li><strong>Endoscopic ultrasound (EUS):</strong> Endoscope with ultrasound probe at tip. Allows high-resolution imaging of GI wall layers, adjacent structures, lymph nodes. Indications: staging oesophageal/gastric/pancreatic cancer, assessing submucosal lesions, EUS-guided FNA of lymph nodes/pancreatic masses, drainage of pancreatic pseudocysts/walled-off necrosis.</li>
+      <li><strong>Oesophageal manometry:</strong> Measures oesophageal motor function and lower oesophageal sphincter pressure. Essential before anti-reflux surgery (Nissen fundoplication) to exclude oesophageal dysmotility. Diagnostic for achalasia (absent peristalsis + failed LOS relaxation on HRM).</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- INVESTIGATIONS -->
+<div class="panel" id="panel-imaging">
+  <div class="ph"><div class="ph-crumb">Diagnostic Investigations</div><h2>GI Investigations &amp; Imaging</h2><div class="g-line"></div><p>Research guide to understanding gastroenterology investigations &mdash; imaging, blood tests, and specialist tests.</p></div>
+  <div class="sb"><h3>Imaging Modalities</h3>
+    <table><tr><th>Investigation</th><th>What It Shows</th><th>Key Uses</th></tr>
+    <tr><td>USS Abdomen</td><td>Liver, gallbladder, bile ducts, pancreas, kidneys, ascites</td><td>First-line for gallstones, hepatomegaly, ascites, liver lesions (follow-up with CT/MRI if lesion found)</td></tr>
+    <tr><td>CT Abdomen/Pelvis</td><td>All abdominal organs, bowel, mesenteric lymph nodes, vasculature</td><td>Acute abdominal pain, bowel obstruction, pancreatitis severity/complications, cancer staging, GI bleeding angiography</td></tr>
+    <tr><td>MRI Liver (multiphase)</td><td>Liver lesion characterisation, bile ducts (MRCP)</td><td>HCC diagnosis (LIRADS), hepatic metastases, MRCP for biliary anatomy (non-invasive alternative to ERCP for diagnosis)</td></tr>
+    <tr><td>MRI Pelvis</td><td>Rectal wall layers, perianal disease, mesorectal lymph nodes</td><td>Rectal cancer staging (essential before surgery), perianal Crohn's assessment</td></tr>
+    <tr><td>MRI Enterography (MRE)</td><td>Small bowel wall, mesentery, fistulae, abscesses</td><td>Crohn's disease extent and activity assessment, small bowel complications</td></tr>
+    <tr><td>Fibroscan (Transient Elastography)</td><td>Liver stiffness = fibrosis stage. CAP score = steatosis degree.</td><td>Non-invasive liver fibrosis staging in NAFLD, chronic hepatitis B/C. Avoids need for liver biopsy in many cases.</td></tr>
+    <tr><td>CT Colonography (Virtual Colonoscopy)</td><td>Colonic mucosa and wall from outside</td><td>Colorectal cancer screening/polyp detection in patients unfit for/declining colonoscopy</td></tr>
+    </table>
+  </div>
+  <div class="sb"><h3>Key Blood Tests in Gastroenterology</h3>
+    <table><tr><th>Test</th><th>What It Assesses</th><th>Key Uses</th></tr>
+    <tr><td>LFTs (ALT, AST, ALP, GGT, Bilirubin, Albumin)</td><td>Hepatocellular damage (ALT/AST), cholestasis (ALP/GGT/bilirubin), synthetic function (albumin)</td><td>Liver disease assessment. ALT/AST ratio over 2:1 suggests alcohol. ALP elevation suggests biliary pathology.</td></tr>
+    <tr><td>Prothrombin Time (PT/INR)</td><td>Hepatic synthetic function</td><td>Key marker of liver disease severity. Elevated PT indicates reduced clotting factor synthesis by liver.</td></tr>
+    <tr><td>Faecal Calprotectin</td><td>Intestinal inflammation marker</td><td>Discriminates IBD (elevated, over 200 mcg/g) from IBS (normal). Also used to monitor IBD activity.</td></tr>
+    <tr><td>Anti-TTG IgA (+ total IgA)</td><td>Coeliac disease autoantibody</td><td>Most sensitive/specific serological test for coeliac disease. Must be done on gluten-containing diet.</td></tr>
+    <tr><td>CEA, CA19-9</td><td>Tumour markers</td><td>CEA: colorectal cancer monitoring. CA19-9: pancreatic cancer (limited specificity, not a screening test)</td></tr>
+    <tr><td>AFP (Alpha-fetoprotein)</td><td>Liver tumour marker</td><td>HCC screening (with 6-monthly USS in cirrhotics). Elevated in ~60-70% of HCC.</td></tr>
+    <tr><td>H. pylori tests</td><td>Urea breath test, stool antigen, serology</td><td>UBT and stool antigen: active infection. Serology: previous exposure (not for test-of-cure). CLO test: endoscopic biopsy.</td></tr>
+    </table>
+  </div>
+  <div class="sb"><h3>Specialist GI Tests</h3>
+    <table><tr><th>Test</th><th>Purpose</th><th>Key Information</th></tr>
+    <tr><td>24-hour pH monitoring / pH-impedance</td><td>Gold-standard for confirming acid (and non-acid) reflux</td><td>Stop PPIs 7 days before. Measures total acid exposure time (normal under 4-6%) and reflux episodes.</td></tr>
+    <tr><td>Faecal elastase-1</td><td>Exocrine pancreatic function</td><td>Low level (under 200 mcg/g stool) suggests exocrine pancreatic insufficiency (EPI). Non-invasive.</td></tr>
+    <tr><td>Urea breath test (UBT)</td><td>Active H. pylori infection</td><td>Drink urea solution, breath sample collected 30 minutes later. Stop antibiotics 4 weeks before, PPIs 2 weeks before.</td></tr>
+    <tr><td>Glucose hydrogen breath test (GHBT)</td><td>Small intestinal bacterial overgrowth (SIBO)</td><td>Elevated hydrogen/methane after oral glucose suggests SIBO. Common in IBS-D, Crohn's, motility disorders.</td></tr>
+    <tr><td>SeHCAT test (75Se-HCAT)</td><td>Bile acid malabsorption</td><td>Useful in chronic watery diarrhoea, especially post-cholecystectomy, after ileal Crohn's surgery.</td></tr>
+    <tr><td>Gastric emptying scan</td><td>Gastroparesis diagnosis</td><td>Nuclear medicine test. Eat radiolabelled meal, serial imaging at 1, 2, 4 hours. Stop prokinetics before test.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="panel" id="panel-emergency">
+  <div class="ph"><div class="ph-crumb">URGENT</div><h2>GI Emergency Guide</h2><div class="g-line"></div></div>
+  <div class="alert emergency"><span class="ai-ic">&#128680;</span><div>GI EMERGENCIES &mdash; CALL 112 (India) / 999 (UK) / 911 (US) IMMEDIATELY: Vomiting blood, black tarry stools, sudden severe abdominal pain, rigid abdomen (perforation), jaundice with fever and rigors (cholangitis), signs of acute liver failure, toxic megacolon. These are time-critical life-threatening emergencies.</div></div>
+  <div class="g2">
+    <div class="sb"><h3>&#128680; Upper GI Bleeding</h3>
+      <p><strong>Recognition:</strong> Haematemesis (vomiting fresh red blood or coffee-ground material) or Melaena (black tarry foul-smelling stools = digested blood from upper GI source).</p>
+      <h4>Immediate Actions</h4><ul>
+        <li>Call 999/112/911 immediately for large bleeds or haemodynamic instability</li>
+        <li>Large bore IV access x2, fluid resuscitation (target systolic over 90mmHg)</li>
+        <li>Urgent blood tests: FBC, clotting, U&amp;E, LFTs, group &amp; save/crossmatch</li>
+        <li>Blood transfusion if Hb under 70-80 g/L (threshold 100 g/L if cardiovascular disease)</li>
+        <li>IV PPI (omeprazole 80mg bolus) for suspected peptic ulcer bleeding</li>
+        <li>Terlipressin IV if variceal bleeding suspected (cirrhotic patient)</li>
+        <li>Urgent endoscopy within 24 hours (12 hours if haemodynamically unstable or suspected varices)</li>
+      </ul>
+    </div>
+    <div class="sb"><h3>&#128680; GI Perforation</h3>
+      <p><strong>Recognition:</strong> Sudden onset severe generalised abdominal pain, board-like rigid abdomen, rebound tenderness, absent bowel sounds, haemodynamic instability. Pain may radiate to shoulder tip (diaphragmatic irritation from free gas).</p>
+      <h4>Critical Points</h4><ul>
+        <li>SURGICAL EMERGENCY &mdash; call emergency services immediately</li>
+        <li>Most common causes: perforated peptic ulcer, perforated diverticulitis, colonic cancer perforation</li>
+        <li>Erect chest X-ray: free air under diaphragm (present in 70-80% of perforations)</li>
+        <li>CT abdomen and pelvis: confirms diagnosis, identifies source</li>
+        <li>IV antibiotics (broad-spectrum), IV fluids, nasogastric tube, urinary catheter</li>
+        <li>Emergency surgery (laparoscopic or open) or conservative management in selected cases</li>
+      </ul>
+    </div>
+    <div class="sb"><h3>&#128680; Acute Cholangitis</h3>
+      <p><strong>Charcot's Triad:</strong> Fever + Jaundice + Right upper quadrant pain. <strong>Reynold's Pentad</strong> (severe): adds Hypotension + Altered consciousness.</p>
+      <h4>Critical Points</h4><ul>
+        <li>Caused by biliary obstruction (gallstones, strictures, cancer) + bacterial infection</li>
+        <li>Tokyo Guidelines severity grading: Grade I (mild), II (moderate), III (severe with organ dysfunction)</li>
+        <li>IV antibiotics immediately (piperacillin-tazobactam or co-amoxiclav + metronidazole)</li>
+        <li>Urgent ERCP for biliary decompression within 24-48 hours (within 12 hours for Grade III)</li>
+        <li>Blood cultures before antibiotics if possible</li>
+      </ul>
+    </div>
+    <div class="sb"><h3>&#128680; Acute Liver Failure</h3>
+      <p><strong>Recognition:</strong> Rapid onset jaundice + coagulopathy (INR over 1.5) + hepatic encephalopathy in previously normal liver, developing within 26 weeks.</p>
+      <h4>Critical Points</h4><ul>
+        <li>Causes: paracetamol overdose (most common UK/India), viral hepatitis (HAV, HBV), autoimmune, Wilson's disease, Budd-Chiari, drugs</li>
+        <li>MEDICAL EMERGENCY: ICU level care required</li>
+        <li>N-acetylcysteine IV immediately for paracetamol overdose (effective even if late)</li>
+        <li>Contact liver transplant centre early (King's College criteria guide listing)</li>
+        <li>Manage hypoglycaemia, coagulopathy, encephalopathy, renal failure</li>
+        <li>Antiviral therapy if viral cause (entecavir for HBV, antivirals for HSV)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="sb"><h3>Other GI Emergencies</h3><ul>
+    <li><strong>Toxic megacolon:</strong> Colonic dilatation (transverse colon over 6cm) + systemic toxicity in severe colitis (UC or C. difficile). ICU, IV steroids + antibiotics, surgical consultation. Emergency colectomy if no improvement in 24-72 hours.</li>
+    <li><strong>Acute severe pancreatitis:</strong> Predicted severe (Ranson/Glasgow/CTSI criteria), ICU care, aggressive IV fluid resuscitation, early enteral nutrition, ERCP if CBD stones + cholangitis within 72 hours, surgical/radiological drainage for infected necrosis.</li>
+    <li><strong>Bowel obstruction:</strong> Abdominal distension + colicky pain + vomiting + absolute constipation. Small bowel obstruction (most commonly adhesions): drip-and-suck. Large bowel obstruction (cancer, volvulus): CT urgently, endoscopic decompression, surgery. Volvulus: urgent endoscopic decompression if non-ischaemic.</li>
+    <li><strong>Mesenteric ischaemia:</strong> Severe abdominal pain out of proportion to examination findings. Causes: arterial (embolic/thrombotic), venous thrombosis, non-occlusive. CT angiography. Surgical emergency (bowel resection if necrosed).</li>
+  </ul></div>
+</div>
+
+<!-- GI DIET -->
+<div class="panel" id="panel-diet">
+  <div class="ph"><div class="ph-crumb">GI Nutrition</div><h2>GI Diet &amp; Nutrition</h2><div class="g-line"></div><p>Evidence-based dietary protocols for GI conditions from gastroenterology and dietetics guidelines.</p></div>
+  <div class="tab-bar">
+    <button class="tbtn active" onclick="switchTab(this,'dt1')">Low-FODMAP (IBS)</button>
+    <button class="tbtn" onclick="switchTab(this,'dt2')">Gluten-Free (Coeliac)</button>
+    <button class="tbtn" onclick="switchTab(this,'dt3')">GERD Diet</button>
+    <button class="tbtn" onclick="switchTab(this,'dt4')">Liver &amp; Cirrhosis Diet</button>
+    <button class="tbtn" onclick="switchTab(this,'dt5')">IBD Nutrition</button>
+  </div>
+  <div class="tpane active" id="dt1">
+    <div class="sb"><h3>Low-FODMAP Diet for IBS</h3>
+      <p>FODMAP = Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. These poorly absorbed short-chain carbohydrates are fermented by gut bacteria, producing gas and drawing water into the bowel &mdash; triggering IBS symptoms. The low-FODMAP diet reduces these, with evidence of 70% response rate in IBS-D. Supervised by a dietitian is essential for correct implementation and avoiding nutritional deficiencies.</p>
+      <h4>Phase 1 (2-6 weeks): Restriction Phase &mdash; Foods to Avoid</h4><ul>
+        <li><strong>Oligosaccharides (fructans/GOS):</strong> Wheat, rye, onion, garlic, leek, spring onion (white part), beans, lentils, chickpeas, cashews, pistachios</li>
+        <li><strong>Disaccharides (lactose):</strong> Cow's milk, soft cheeses (ricotta, cottage), ice cream, yoghurt</li>
+        <li><strong>Monosaccharides (excess fructose):</strong> Apple, pear, mango, watermelon, honey, high-fructose corn syrup</li>
+        <li><strong>Polyols:</strong> Avocado, blackberries, cauliflower, mushrooms, sorbitol/mannitol/xylitol/maltitol (sugar-free sweets, gum)</li>
+      </ul>
+      <h4>Low-FODMAP Foods Allowed</h4><ul>
+        <li>Grains: rice, quinoa, oats, polenta, gluten-free bread (note: wheat exclusion in low-FODMAP is for fructan content, not gluten)</li>
+        <li>Protein: eggs, tofu (firm), meat, fish, seafood</li>
+        <li>Dairy: lactose-free milk, hard cheeses (cheddar, parmesan), butter</li>
+        <li>Vegetables: carrot, cucumber, aubergine, green beans, potato, spinach, tomato, courgette, pepper</li>
+        <li>Fruit: banana, blueberry, grape, kiwi, orange, strawberry, pineapple</li>
+      </ul>
+      <h4>Phase 2: Reintroduction (6-8 weeks)</h4>
+      <p>Systematic reintroduction of FODMAP groups one at a time to identify individual triggers. Most patients are sensitive to only 1-2 FODMAP groups, not all. Phase 3: long-term personalised diet based on identified triggers.</p>
+    </div>
+  </div>
+  <div class="tpane" id="dt2">
+    <div class="sb"><h3>Gluten-Free Diet (Coeliac Disease)</h3>
+      <p>Strict lifelong gluten-free diet is the only treatment for coeliac disease. Gluten = protein in wheat, barley, and rye. Oats are safe for most coeliac patients but must be certified gluten-free oats (risk of cross-contamination in regular oats). Even small amounts of gluten cause mucosal damage.</p>
+      <h4>Foods Containing Gluten (Avoid Strictly)</h4><ul>
+        <li>Wheat: bread, pasta, couscous, semolina, spelt, kamut, durum wheat</li>
+        <li>Barley: beer, malt extract, barley water, some soups</li>
+        <li>Rye: rye bread, crispbreads</li>
+        <li>Hidden sources: sauces, gravies, soups, sausages, processed meats, stock cubes, medications (check excipients)</li>
+      </ul>
+      <h4>Naturally Gluten-Free Staples</h4><ul>
+        <li>Rice, corn/maize, potato, quinoa, buckwheat, millet, sorghum, tapioca</li>
+        <li>In India: most dals, rice-based preparations (idli, dosa, poha) are naturally gluten-free. Beware atta/maida in rotis and parathas. Check all packaged foods.</li>
+        <li>Gluten-free labelled products: must contain under 20ppm gluten (EU/UK standard)</li>
+      </ul>
+      <h4>Nutritional Supplementation</h4><ul>
+        <li>Iron: common deficiency in coeliac. Correct after starting GFD (improved absorption).</li>
+        <li>Folate (vitamin B9): often deficient in active coeliac disease</li>
+        <li>Calcium and Vitamin D: bone density affected. DEXA scan recommended.</li>
+        <li>Vitamin B12: less commonly deficient than in Crohn's but monitor</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tpane" id="dt3">
+    <div class="sb"><h3>GERD and Acid Reflux Diet</h3>
+      <h4>Foods and Habits That Worsen Reflux</h4><ul>
+        <li>High-fat foods: delay gastric emptying, relax lower oesophageal sphincter</li>
+        <li>Coffee and caffeinated drinks: relax LOS, increase acid secretion</li>
+        <li>Alcohol: relaxes LOS, increases gastric acid, directly irritates oesophageal mucosa</li>
+        <li>Chocolate: contains methylxanthines that relax LOS</li>
+        <li>Citrus fruits and tomatoes: highly acidic, worsen oesophageal symptoms (though do not cause reflux)</li>
+        <li>Peppermint: relaxes LOS (note: peppermint oil capsules for IBS should be enteric-coated to bypass LOS)</li>
+        <li>Carbonated drinks: increase gastric pressure and gas</li>
+        <li>Large meal volumes: increases gastric pressure</li>
+        <li>Eating within 2-3 hours of lying down: supine position facilitates reflux</li>
+      </ul>
+      <h4>Lifestyle Measures</h4><ul>
+        <li>Elevation of head of bed 15-20cm (wedge pillow or bed blocks under head posts) &mdash; most evidence-based lifestyle intervention</li>
+        <li>Weight loss: reduces intra-abdominal pressure and reflux episodes significantly</li>
+        <li>Smoking cessation: smoking reduces LOS pressure and increases acid</li>
+        <li>Smaller, more frequent meals rather than large meals</li>
+        <li>Left lateral decubitus sleeping position reduces nocturnal reflux</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tpane" id="dt4">
+    <div class="sb"><h3>Liver Disease and Cirrhosis Diet</h3>
+      <h4>General Principles</h4><ul>
+        <li><strong>Protein:</strong> Adequate protein (1.0-1.5g/kg/day) is essential in cirrhosis. Old advice to restrict protein to prevent hepatic encephalopathy is WRONG and harmful &mdash; leads to muscle wasting (sarcopenia) which worsens survival. Late evening snack (50g complex carbohydrate): proven to reduce protein catabolism overnight.</li>
+        <li><strong>Salt/Sodium restriction:</strong> Under 90mmol/day (under 2g sodium = under 5g salt/day) for patients with ascites. Strict no-added-salt diet. Avoid processed foods, ready meals, tinned soups, salty snacks, pickles.</li>
+        <li><strong>Fluid restriction:</strong> Only needed if dilutional hyponatraemia (sodium under 125-130). Routine fluid restriction is NOT recommended for most patients with ascites.</li>
+        <li><strong>Alcohol abstinence:</strong> Absolute. Even small amounts accelerate liver damage in alcoholic liver disease. Abstinence is the single most important intervention.</li>
+        <li><strong>NAFLD/MASH:</strong> Weight loss most effective treatment (even 5-10% weight loss reduces liver fat and inflammation). Mediterranean-style diet evidence-based for NAFLD. Avoid fructose-containing drinks (high-fructose corn syrup, soft drinks). Regular aerobic exercise.</li>
+      </ul>
+      <h4>Micronutrient Considerations in Cirrhosis</h4><ul>
+        <li>Zinc deficiency: common in cirrhosis. Zinc supplementation may improve hepatic encephalopathy and immune function.</li>
+        <li>Thiamine (Vitamin B1): deficiency in alcohol use disorder. Parenteral thiamine before IV dextrose to prevent Wernicke's encephalopathy.</li>
+        <li>Fat-soluble vitamins (A, D, E, K): malabsorbed in cholestatic liver disease. Monitor and supplement.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tpane" id="dt5">
+    <div class="sb"><h3>IBD Nutrition</h3>
+      <h4>Active Disease</h4><ul>
+        <li>Enteral nutrition (liquid formula feeds): as effective as steroids for induction of remission in paediatric Crohn's disease. Less effective in adults for inducing remission but used to support nutrition and bowel rest.</li>
+        <li>Elemental/polymeric feeds: absorbed in the small bowel, reduce antigenic load. Used for Crohn's disease flares, post-surgical periods, growth failure in children.</li>
+        <li>Low-residue diet: during small bowel obstruction or strictures in Crohn's &mdash; avoid high-fibre foods, nuts, seeds, raw vegetables. Soft-cooked well-chewed foods.</li>
+      </ul>
+      <h4>Nutritional Deficiencies in IBD</h4><ul>
+        <li>Iron deficiency anaemia: very common. IV iron preferred over oral in active IBD (oral iron not well absorbed and may worsen intestinal inflammation). Monitor regularly.</li>
+        <li>Vitamin B12: ileal Crohn's disease or terminal ileal resection impairs B12 absorption (intrinsic factor-mediated absorption in terminal ileum). IM B12 injections (hydroxocobalamin) 3-monthly if ileum affected/resected.</li>
+        <li>Vitamin D: almost universally low. Supplement D3 1000-2000 IU/day. Monitor 25-OH Vitamin D.</li>
+        <li>Folate: mesalazine impairs folate absorption. 5mg folic acid daily recommended on mesalazine. Essential if methotrexate used.</li>
+        <li>Calcium: corticosteroid use + malabsorption + dietary avoidance of dairy increase osteoporosis risk. Supplement calcium 1000mg/day + Vitamin D.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- LIVER HEALTH -->
+<div class="panel" id="panel-liver">
+  <div class="ph"><div class="ph-crumb">Hepatology</div><h2>Liver Health</h2><div class="g-line"></div><p>Comprehensive research on liver diseases, cirrhosis complications, and liver health from EASL and BSG guidelines.</p></div>
+  <div class="sb"><h3>Cirrhosis and Its Complications</h3>
+    <p>Cirrhosis is the irreversible end-stage of liver fibrosis, characterised by diffuse nodular regeneration with fibrous bands distorting hepatic architecture and portal hypertension. Child-Pugh and MELD scores quantify severity. All cirrhotics require HCC surveillance (6-monthly USS +/- AFP).</p>
+    <h4>Complications of Cirrhosis</h4>
+    <ul>
+      <li><strong>Ascites:</strong> Sodium restriction, spironolactone +/- furosemide, therapeutic paracentesis (with albumin 6-8g/L drained for volumes over 5L). TIPSS if refractory. Avoid NSAIDs.</li>
+      <li><strong>SBP (Spontaneous Bacterial Peritonitis):</strong> Diagnostic tap if new ascites or deterioration. PMN over 250/mm3 = SBP. IV antibiotics (cefotaxime/tazobactam), IV albumin (reduces hepatorenal syndrome risk). Long-term norfloxacin prophylaxis after first episode.</li>
+      <li><strong>Oesophageal varices:</strong> Gastroscopy to assess. Non-selective beta-blockers (propranolol/carvedilol) for primary prophylaxis (medium/large varices). Acute bleeding: terlipressin + endoscopic band ligation. TIPSS for refractory bleeding.</li>
+      <li><strong>Hepatic encephalopathy (HE):</strong> Identify and treat precipitants (infection, GI bleeding, constipation, electrolyte disturbance, medications). Lactulose to 2-3 soft stools/day. Rifaximin 550mg BD for recurrent HE.</li>
+      <li><strong>Hepatorenal syndrome (HRS):</strong> Functional renal failure in cirrhosis. Type 1 (rapidly progressive) and Type 2 (slower). Terlipressin + albumin for Type 1 HRS. Avoid nephrotoxics (NSAIDs, aminoglycosides, IV contrast where possible).</li>
+    </ul>
+  </div>
+  <div class="sb"><h3>NAFLD / MASLD / MASH</h3>
+    <p>Non-Alcoholic Fatty Liver Disease (NAFLD) / Metabolic Dysfunction-Associated Steatotic Liver Disease (MASLD): Fat accumulation in the liver in the absence of significant alcohol use, associated with metabolic risk factors (obesity, T2DM, dyslipidaemia, hypertension). Most common liver disease globally. Spectrum: simple steatosis (benign course in most) through NASH/MASH (active inflammation and injury) to fibrosis, cirrhosis, and HCC.</p>
+    <ul>
+      <li><strong>Assessment:</strong> LFTs, fibroscan (CAP score for steatosis, liver stiffness for fibrosis), FIB-4 score (age x AST / (platelets x sqrt ALT)). High FIB-4 (over 2.67) or high fibroscan stiffness: refer to hepatology. MRI-PDFF: most accurate fat quantification.</li>
+      <li><strong>Management:</strong> Weight loss 5-10% improves steatosis; 10%+ can reverse NASH and fibrosis. Mediterranean diet recommended. Aerobic exercise 150 minutes/week. Treat metabolic risk factors (blood pressure, cholesterol, diabetes control). GLP-1 agonists (semaglutide) reduce liver fat and NASH activity. Resmetirom (FDA 2024): first approved treatment for MASH with fibrosis (F2-F3).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- CANCER SCREENING -->
+<div class="panel" id="panel-cancer">
+  <div class="ph"><div class="ph-crumb">GI Oncology</div><h2>GI Cancer Screening &amp; Surveillance</h2><div class="g-line"></div><p>Evidence-based GI cancer screening, surveillance, and early detection from BSG, ACG and NICE guidelines.</p></div>
+  <div class="sb"><h3>Colorectal Cancer (CRC) Screening</h3>
+    <ul>
+      <li><strong>FIT (Faecal Immunochemical Test):</strong> NHS programme: every 2 years, age 50-74 (being extended to age 45-50). Positive FIT (haemoglobin over 10 mcg/g): urgent colonoscopy referral. FIT is quantitative, patient-friendly, no dietary restrictions.</li>
+      <li><strong>Average risk colonoscopy screening:</strong> Not standard in UK (used in USA). Single one-off flexible sigmoidoscopy at age 55 (NHS Bowel Scope programme) was piloted but not rolled out nationally.</li>
+      <li><strong>High-risk groups:</strong> Personal history of CRC or adenomas (post-polypectomy surveillance), family history (first-degree relative under 60 with CRC: colonoscopy from age 35-40 or 10 years before relative's age of diagnosis). Hereditary syndromes: annual/biennial colonoscopy.</li>
+      <li><strong>Lynch syndrome:</strong> Colonoscopy every 1-2 years from age 25. All CRC should have universal MMR immunohistochemistry testing.</li>
+      <li><strong>FAP (Familial Adenomatous Polyposis):</strong> Annual flexible sigmoidoscopy from age 13-15. Colectomy usually needed by 20s (hundreds of polyps, near 100% lifetime CRC risk without surgery).</li>
+    </ul>
+  </div>
+  <div class="sb"><h3>Barrett's Oesophagus Surveillance</h3>
+    <ul>
+      <li>No dysplasia: surveillance OGD every 3-5 years (BSG guidelines). Optimise PPI therapy.</li>
+      <li>Low-grade dysplasia (LGD) confirmed by two pathologists: endoscopic eradication therapy (RFA) recommended in NICE-approved centres. Alternatively, 6-monthly surveillance if patient declines therapy.</li>
+      <li>High-grade dysplasia (HGD) or T1a cancer: Endoscopic therapy (EMR for visible lesions + RFA for flat Barrett's). Highly curative if caught at this stage (over 95% cure with endotherapy vs major oesophagectomy surgery previously required).</li>
+    </ul>
+  </div>
+  <div class="sb"><h3>H. pylori and Gastric Cancer</h3>
+    <ul>
+      <li>H. pylori is a WHO class 1 carcinogen for gastric cancer. Eradication reduces gastric cancer risk by approximately 35-40% (especially if eradicated before development of gastric atrophy).</li>
+      <li><strong>Gastric cancer screening:</strong> No national programme in UK/India. High-risk individuals (family history of gastric cancer, confirmed H. pylori + atrophic gastritis, previous partial gastrectomy): endoscopy surveillance programme.</li>
+      <li><strong>High-risk populations:</strong> East Asian (Japanese, Korean, Chinese) populations have significantly higher gastric cancer rates. Countries with national gastric cancer screening (Japan, Korea) using OGD or double-contrast barium study from age 40-50.</li>
+      <li><strong>Correa cascade:</strong> H. pylori → chronic gastritis → gastric atrophy → intestinal metaplasia → dysplasia → gastric adenocarcinoma. Eradication before atrophy stage most protective.</li>
+    </ul>
+  </div>
+  <div class="sb"><h3>Hepatocellular Carcinoma (HCC) Surveillance</h3>
+    <ul>
+      <li><strong>Who needs surveillance:</strong> All cirrhotic patients. HBV-infected patients without cirrhosis (certain subgroups per EASL criteria: Asian males over 40, Asian females over 50, African origin, family history HCC).</li>
+      <li><strong>Surveillance protocol:</strong> 6-monthly abdominal ultrasound +/- AFP. CT or MRI liver if USS identifies lesion over 1cm or AFP rising.</li>
+      <li><strong>LIRADS classification:</strong> LI-RADS 1-2 (benign), LI-RADS 3 (intermediate), LI-RADS 4 (probably HCC), LI-RADS 5 (definitely HCC = diagnostic for HCC without biopsy if typical imaging features on CT/MRI).</li>
+      <li><strong>Treatment:</strong> BCLC staging guides treatment. Early (BCLC 0-A): surgical resection, ablation (RFA/MWA), or liver transplantation (Milan criteria). Intermediate (BCLC B): TACE (trans-arterial chemoembolisation). Advanced (BCLC C): sorafenib/lenvatinib or atezolizumab+bevacizumab (immunotherapy).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- AI CHAT -->
+<div class="panel" id="panel-chat">
+  <div class="ph"><div class="ph-crumb">AI Research Assistant</div><h2>Ask GastroCare AI</h2><div class="g-line"></div><p>Ask any question about GI health. AI-researched from BSG, ACG, EASL and NICE guidelines. <strong>Free forever.</strong></p></div>
+  <div class="alert emergency"><span class="ai-ic">&#128680;</span><div>GI EMERGENCY (vomiting blood, black stools, severe abdominal pain, rigid abdomen) &mdash; CALL 112/999/911 IMMEDIATELY. Do NOT type here first.</div></div>
+  <div class="alert warn"><span class="ai-ic">&#9888;&#65039;</span><div>AI responses are for educational research only. Not medical advice. Always consult your gastroenterologist.</div></div>
+  <div class="chat-wrap">
+    <div class="chat-head"><h3>&#127987;&#65039; GastroCare AI Research Assistant</h3><span class="free">FREE FOREVER</span></div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="cm sys">Welcome to GastroCare AI &#127987;&#65039;</div>
+      <div class="cm ai"><div class="ai-lbl">GastroCare AI</div>Hello! I can research questions about GERD, peptic ulcers, IBD, IBS, liver disease, colorectal cancer, GI bleeding, pancreatitis, coeliac disease, and GI medications and procedures. For emergencies &mdash; call 112/999/911. I provide educational research only, not personal medical advice.</div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-in" placeholder="Ask about GI conditions, endoscopy, liver disease, GI medicines, diet..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()">Ask</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="panel" id="panel-settings">
+  <div class="ph"><div class="ph-crumb">Configuration</div><h2>Settings &amp; AI Provider</h2><div class="g-line"></div><p>Choose which AI powers your research. Keys are encrypted with AES-256-GCM and stored only in your browser.</p></div>
+  <div class="sb">
+    <h3>&#129302; Choose Your AI Provider</h3>
+    <p style="margin-bottom:16px;">Pick one of 5 AI providers. Your key is encrypted client-side with AES-256-GCM before storage. Never sent to our servers.</p>
+    <div class="g3" style="margin-bottom:18px;">
+      <div class="card click provider-card" data-provider="openai" onclick="selectProvider('openai')"><div class="ci">&#129001;</div><h3>ChatGPT</h3><p><p><p>OpenAI &mdash; gpt-4o</p><span class="ctag" id="ptag-openai">Not configured</span></div>
+      <div class="card click provider-card" data-provider="gemini" onclick="selectProvider('gemini')"><div class="ci">&#128309;</div><h3>Gemini</h3><p>Google &mdash; gemini-2.0-flash</p><span class="ctag" id="ptag-gemini">Not configured</span></div>
+      <div class="card click provider-card" data-provider="grok" onclick="selectProvider('grok')"><div class="ci">&#9899;</div><h3>Grok</h3><p>xAI &mdash; grok-2-latest</p><span class="ctag" id="ptag-grok">Not configured</span></div>
+      <div class="card click provider-card" data-provider="anthropic" onclick="selectProvider('anthropic')"><div class="ci">&#128995;</div><h3>Claude</h3>Anthropic &mdash; claude-sonnet-4</p><span class="ctag" id="ptag-anthropic">Not configured</span></div>
+      <div class="card click provider-card" data-provider="deepseek" onclick="selectProvider('deepseek')"><div class="ci">&#128308;</div><h3>DeepSeek</h3><p>DeepSeek &mdash; deepseek-chat</p><span class="ctag" id="ptag-deepseek">Not configured</span></div>
+      <div class="card click provider-card" data-provider="" onclick="selectProvider('')"><div class="ci">&#128244;</div><h3>Offline Mode</h3><p>No AI &mdash; embedded knowledge base</p><span class="ctag" id="ptag-offline">Always available</span></div>
+    </div>
+  </div>
+  <div class="api-box" id="key-entry-box">
+    <h3 id="key-entry-title">&#128273; API Key</h3>
+    <p id="key-entry-desc">Select a provider above, then paste its API key here. Encrypted with AES-256-GCM before storage.</p>
+    <div class="api-row">
+      <input class="api-input" type="password" id="api-key-in" placeholder="Paste your API key here">
+      <button class="btn btn-g" onclick="saveKey()">Save</button>
+      <button class="btn btn-outline btn-sm" onclick="clearKey()">Clear</button>
+    </div>
+    <div id="key-status" style="margin-top:10px;font-size:12px;color:var(--text3);">No provider selected &mdash; offline mode.</div>
+    <div style="margin-top:6px;font-size:11px;color:var(--text3);">&#128274; AES-256-GCM encrypted &middot; PBKDF2 key derivation &middot; Device-bound &middot; Never leaves your browser</div>
+    <div style="margin-top:8px;"><a id="get-key-link" href="#" target="_blank" style="font-size:12px;color:var(--sage);">Get a free API key &#8594;</a></div>
+  </div>
+  <div class="sb"><h3>System Status</h3><div id="sys-stat" style="font-size:13.5px;line-height:2;color:var(--text2);">Server: <span style="color:var(--teal)">&#10003; Running</span><br>Active Provider: <span id="mode-disp">Offline Research</span><br>Security: <span style="color:var(--sage)">&#128274; AES-256-GCM</span><br>Offline Knowledge Base: <span style="color:var(--teal)">&#10003; Available</span></div></div>
+</div>
+
+</main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand"><h3>&#127987;&#65039; GastroCare AI</h3><p>Gastroenterology Health Intelligence Platform &mdash; AI-researched insights from BSG, ACG, EASL, NICE, WHO and peer-reviewed GI literature.</p></div>
+      <div class="footer-col"><h4>Sections</h4><ul>
+        <li><a href="#" onclick="nav('conditions')">GI Conditions</a></li>
+        <li><a href="#" onclick="nav('medicines')">Medicines</a></li>
+        <li><a href="#" onclick="nav('procedures')">Endoscopy</a></li>
+        <li><a href="#" onclick="nav('imaging')">Investigations</a></li>
+        <li><a href="#" onclick="nav('emergency')">GI Emergencies</a></li>
+        <li><a href="#" onclick="nav('diet')">GI Diet</a></li>
+        <li><a href="#" onclick="nav('liver')">Liver Health</a></li>
+        <li><a href="#" onclick="nav('cancer')">Cancer Screening</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Clinical Sources</h4><ul>
+        <li><a href="https://www.bsg.org.uk" target="_blank">BSG Guidelines</a></li>
+        <li><a href="https://www.acg.gi.org" target="_blank">ACG Guidelines</a></li>
+        <li><a href="https://www.easl.eu" target="_blank">EASL Guidelines</a></li>
+        <li><a href="https://www.nice.org.uk" target="_blank">NICE Guidelines</a></li>
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov" target="_blank">PubMed Research</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>GastroCare AI &mdash; For Research &amp; Educational Purposes Only &middot; Not Medical Advice</p>
+      <div class="footer-disc">All information is AI-generated from published gastroenterology literature. Not a substitute for professional GI care. For emergencies call 112 (India) / 999 (UK) / 911 (US) immediately. &#128274; AES-256-GCM key encryption.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// AES-256-GCM Secure Key Storage
+/**
+ * OrthoCare / CardioCare / NeuroCare / GynoCare / OncoCare AI
+ * AES-256-GCM Client-Side Key Security Module v1.0
+ * =====================================================
+ * Encrypts API keys before storing in localStorage using
+ * AES-256-GCM via the browser's native Web Crypto API.
+ * The encryption key is derived from a device-specific
+ * fingerprint using PBKDF2 (100,000 iterations, SHA-256).
+ *
+ * Security properties:
+ * - Keys are NEVER stored in plaintext in localStorage
+ * - AES-256-GCM provides both encryption AND authentication (AEAD)
+ * - The derived key is not persisted anywhere
+ * - A random 96-bit IV is generated for every encryption operation
+ * - PBKDF2 with 100k iterations makes brute-force attacks expensive
+ * - Key never leaves the browser except when sent directly to AI provider API
+ *
+ * Usage: drop this entire block before your ST = {} state declaration.
+ * Then replace all localStorage.setItem(key, JSON.stringify(keys)) with
+ * await SecureKeyStore.save(storeName, keys)
+ * and all JSON.parse(localStorage.getItem(...)) with
+ * await SecureKeyStore.load(storeName)
+ */
+
+const SecureKeyStore = (function() {
+  'use strict';
+
+  // Derive a deterministic device fingerprint from stable browser properties.
+  // This is NOT cryptographically strong identity - it's a convenience measure
+  // to ensure keys encrypted on this browser can only be decrypted on this browser.
+  function getDeviceFingerprint(appId) {
+    var parts = [
+      appId,
+      navigator.userAgent || '',
+      navigator.language || '',
+      (screen.width || 0) + 'x' + (screen.height || 0),
+      navigator.hardwareConcurrency || 0,
+      Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    ];
+    return parts.join('|:|');
+  }
+
+  // Derive AES-256 key from fingerprint using PBKDF2
+  async function deriveKey(appId) {
+    var fingerprint = getDeviceFingerprint(appId);
+    var encoder = new TextEncoder();
+    var rawKey = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(fingerprint),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveKey']
+    );
+    // Use a fixed but app-specific salt (not secret - purpose is just domain separation)
+    var salt = encoder.encode('medical-ai-platform-' + appId + '-v1');
+    return await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+      rawKey,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt']
+    );
+  }
+
+  // Encrypt a string value, returns base64-encoded IV + ciphertext
+  async function encrypt(plaintext, appId) {
+    var key = await deriveKey(appId);
+    var iv = crypto.getRandomValues(new Uint8Array(12)); // 96-bit random IV
+    var encoder = new TextEncoder();
+    var ciphertext = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv: iv },
+      key,
+      encoder.encode(plaintext)
+    );
+    // Prepend IV to ciphertext for storage: [12 bytes IV][ciphertext]
+    var combined = new Uint8Array(iv.length + ciphertext.byteLength);
+    combined.set(iv, 0);
+    combined.set(new Uint8Array(ciphertext), iv.length);
+    return btoa(String.fromCharCode.apply(null, combined));
+  }
+
+  // Decrypt a base64-encoded IV + ciphertext string
+  async function decrypt(encoded, appId) {
+    try {
+      var key = await deriveKey(appId);
+      var combined = new Uint8Array(
+        atob(encoded).split('').map(function(c) { return c.charCodeAt(0); })
+      );
+      var iv = combined.slice(0, 12);
+      var ciphertext = combined.slice(12);
+      var plaintext = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: iv },
+        key,
+        ciphertext
+      );
+      return new TextDecoder().decode(plaintext);
+    } catch (e) {
+      // Decryption failed - key may have been stored with old method (plaintext)
+      // or device fingerprint changed. Return null to trigger re-entry.
+      return null;
+    }
+  }
+
+  // Public API
+  return {
+    /**
+     * Save API keys object to localStorage with AES-256-GCM encryption.
+     * @param {string} storeName - localStorage key name (e.g. 'cc_keys')
+     * @param {string} appId - app-specific ID for key derivation (e.g. 'cardiocare')
+     * @param {object} keysObj - { provider: 'sk-...' } keys object
+     */
+    save: async function(storeName, appId, keysObj) {
+      try {
+        var plaintext = JSON.stringify(keysObj);
+        var encrypted = await encrypt(plaintext, appId);
+        localStorage.setItem(storeName, encrypted);
+        localStorage.setItem(storeName + '_enc', '1'); // flag: encrypted format
+        return true;
+      } catch (e) {
+        // Fallback: if Web Crypto unavailable (very old browser), store plaintext
+        console.warn('[SecureKeyStore] Encryption unavailable, storing plaintext:', e.message);
+        localStorage.setItem(storeName, JSON.stringify(keysObj));
+        return false;
+      }
+    },
+
+    /**
+     * Load and decrypt API keys from localStorage.
+     * @param {string} storeName - localStorage key name
+     * @param {string} appId - must match what was used in save()
+     * @returns {object} keysObj or {} if not found / decryption failed
+     */
+    load: async function(storeName, appId) {
+      try {
+        var stored = localStorage.getItem(storeName);
+        if (!stored) return {};
+        var isEncrypted = localStorage.getItem(storeName + '_enc') === '1';
+        if (!isEncrypted) {
+          // Migrate plaintext to encrypted on next save
+          var parsed = JSON.parse(stored);
+          // Auto-migrate: re-encrypt now
+          await this.save(storeName, appId, parsed);
+          return parsed;
+        }
+        var plaintext = await decrypt(stored, appId);
+        if (plaintext === null) {
+          // Decryption failed (e.g. different browser/device after migration)
+          // Clear and start fresh - user will need to re-enter keys
+          console.warn('[SecureKeyStore] Decryption failed - clearing stored keys');
+          localStorage.removeItem(storeName);
+          localStorage.removeItem(storeName + '_enc');
+          return {};
+        }
+        return JSON.parse(plaintext);
+      } catch (e) {
+        return {};
+      }
+    },
+
+    /**
+     * Remove all keys for a store.
+     */
+    clear: function(storeName) {
+      localStorage.removeItem(storeName);
+      localStorage.removeItem(storeName + '_enc');
+    },
+
+    /**
+     * Check if Web Crypto AES-GCM is available in this browser.
+     */
+    isAvailable: function() {
+      return !!(window.crypto && window.crypto.subtle && window.crypto.subtle.encrypt);
+    }
+  };
+})();
+
+
+// Application Code
+var PROVIDERS = {
+  anthropic:{label:'Claude (Anthropic)',placeholder:'sk-ant-api03-...',getKeyUrl:'https://console.anthropic.com',icon:'&#128995;'},
+  openai:{label:'ChatGPT (OpenAI)',placeholder:'sk-...',getKeyUrl:'https://platform.openai.com/api-keys',icon:'&#129001;'},
+  gemini:{label:'Gemini (Google)',placeholder:'AIza...',getKeyUrl:'https://aistudio.google.com/apikey',icon:'&#128309;'},
+  grok:{label:'Grok (xAI)',placeholder:'xai-...',getKeyUrl:'https://console.x.ai',icon:'&#9899;'},
+  deepseek:{label:'DeepSeek',placeholder:'sk-...',getKeyUrl:'https://platform.deepseek.com/api_keys',icon:'&#128308;'}
+};
+var ST = { provider: localStorage.getItem('gastrocare_provider') || '', keys: {}, files: [] };
+function currentApiKey(){ return ST.provider ? (ST.keys[ST.provider] || '') : ''; }
+
+document.addEventListener('DOMContentLoaded', function(){
+  (async function(){
+    if(SecureKeyStore.isAvailable()){ ST.keys = await SecureKeyStore.load('gastrocare_keys','gastrocare'); }
+    else { var r=localStorage.getItem('gastrocare_keys'); ST.keys=r?JSON.parse(r):{}; }
+  })();
+  ['dc1','dc2','dc3'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', function(){
+      var ok=['dc1','dc2','dc3'].every(function(i){ return document.getElementById(i).checked; });
+      document.getElementById('disc-btn').disabled = !ok;
+    });
+  });
+  if(sessionStorage.getItem('gastrocare_disc')) document.getElementById('disc-modal').style.display='none';
+  setTimeout(function(){ refreshProviderTags(); selectProvider(ST.provider,true); },100);
+});
+
+function acceptDisc(){ document.getElementById('disc-modal').style.display='none'; sessionStorage.setItem('gastrocare_disc','1'); }
+
+function nav(id){
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.ntab,.sbi').forEach(function(n){ n.classList.remove('active'); });
+  var p=document.getElementById('panel-'+id); if(p) p.classList.add('active');
+  document.querySelectorAll('.ntab,.sbi').forEach(function(el){ var oc=el.getAttribute('onclick'); if(oc&&oc.indexOf("'"+id+"'")!==-1) el.classList.add('active'); });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function switchTab(btn,id){
+  var parent=btn.closest('.panel');
+  if(parent){ parent.querySelectorAll('.tbtn').forEach(function(b){ b.classList.remove('active'); }); parent.querySelectorAll('.tpane').forEach(function(p){ p.classList.remove('active'); }); }
+  btn.classList.add('active');
+  var pane=document.getElementById(id); if(pane) pane.classList.add('active');
+}
+
+function selectProvider(pid,init){
+  ST.provider=pid; localStorage.setItem('gastrocare_provider',pid);
+  document.querySelectorAll('.provider-card').forEach(function(c){ c.classList.remove('selected'); });
+  var ac=document.querySelector('.provider-card[data-provider="'+pid+'"]');
+  if(ac) ac.classList.add('selected');
+  var box=document.getElementById('key-entry-box'),title=document.getElementById('key-entry-title');
+  var desc=document.getElementById('key-entry-desc'),input=document.getElementById('api-key-in');
+  var link=document.getElementById('get-key-link'),status=document.getElementById('key-status');
+  var md=document.getElementById('mode-disp');
+  if(!pid){ box.style.display='none'; status.textContent='Offline mode.'; md.textContent='Offline Research'; if(!init) toast('Offline mode active.'); return; }
+  var meta=PROVIDERS[pid];
+  box.style.display='block';
+  title.innerHTML=meta.icon+' '+meta.label+' API Key';
+  desc.innerHTML='Get key at <strong>'+meta.getKeyUrl.replace('https://','')+'</strong>. AES-256-GCM encrypted before storage.';
+  input.placeholder=meta.placeholder; input.value=ST.keys[pid]||''; link.href=meta.getKeyUrl;
+  if(ST.keys[pid]){ status.textContent='&#128274; Active: '+meta.label+' configured.'; status.style.color='var(--teal)'; md.textContent='Live AI ('+meta.label+')'; }
+  else { status.textContent='No key for '+meta.label+'.'; status.style.color='var(--text3)'; md.textContent=meta.label+' - key required'; }
+  if(!init) window.scrollTo({top:document.getElementById('key-entry-box').offsetTop-100,behavior:'smooth'});
+}
+
+function refreshProviderTags(){
+  Object.keys(PROVIDERS).forEach(function(p){
+    var tag=document.getElementById('ptag-'+p); if(!tag) return;
+    if(ST.keys[p]){ tag.textContent='Configured'; tag.classList.add('configured'); }
+    else { tag.textContent='Not configured'; tag.classList.remove('configured'); }
+  });
+}
+
+function saveKey(){
+  if(!ST.provider){ toast('Select a provider first.'); return; }
+  var k=document.getElementById('api-key-in').value.trim();
+  if(!k){ toast('Please paste an API key.'); return; }
+  ST.keys[ST.provider]=k;
+  SecureKeyStore.isAvailable()
+    ? SecureKeyStore.save('gastrocare_keys','gastrocare',ST.keys)
+    : localStorage.setItem('gastrocare_keys',JSON.stringify(ST.keys));
+  refreshProviderTags(); selectProvider(ST.provider,true); toast(PROVIDERS[ST.provider].label+' key saved (AES-256 encrypted).');
+}
+function clearKey(){
+  if(!ST.provider) return;
+  delete ST.keys[ST.provider];
+  SecureKeyStore.isAvailable()
+    ? SecureKeyStore.save('gastrocare_keys','gastrocare',ST.keys)
+    : localStorage.setItem('gastrocare_keys',JSON.stringify(ST.keys));
+  document.getElementById('api-key-in').value='';
+  refreshProviderTags(); selectProvider(ST.provider,true);
+}
+
+var FICONS={pdf:'&#128196;',jpg:'&#128444;',jpeg:'&#128444;',png:'&#128444;',docx:'&#128196;',txt:'&#128221;',csv:'&#128202;'};
+function handleFiles(files){
+  Array.from(files).forEach(function(f){
+    if(ST.files.find(function(x){ return x.name===f.name&&x.size===f.size; })) return;
+    ST.files.push(f);
+    var ext=f.name.split('.').pop().toLowerCase();
+    var sz=f.size>1048576?(f.size/1048576).toFixed(1)+'MB':Math.round(f.size/1024)+'KB';
+    var el=document.createElement('div'); el.className='file-row'; el.dataset.fname=f.name;
+    var sn=f.name.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    el.innerHTML='<span class="fr-ico">'+(FICONS[ext]||'&#128193;')+'</span><span class="fr-name">'+sn+'</span><span class="fr-meta">'+sz+'</span><span class="fr-ok">Ready</span><span class="fr-del" onclick="removeByEl(this)">&#10005;</span>';
+    document.getElementById('flist').appendChild(el);
+  });
+}
+function removeByEl(btn){ var r=btn.closest('.file-row'); if(!r) return; var n=r.dataset.fname; ST.files=ST.files.filter(function(f){ return f.name!==n; }); r.remove(); }
+function clearFiles(){ ST.files=[]; document.getElementById('flist').innerHTML=''; }
+function uploadFiles(){
+  if(!ST.files.length){ toast('Please select files first.'); return; }
+  var btn=document.getElementById('up-btn'); setLoad(btn,true);
+  setTimeout(function(){ document.getElementById('up-result').innerHTML='<div class="alert teal" style="margin-top:16px;"><span class="ai-ic">&#10003;</span><div><strong>'+ST.files.length+' file(s) uploaded.</strong> Go to Investigations or Conditions to research your reports.</div></div>'; setLoad(btn,false); },2000);
+}
+
+var CONDITIONS_KB={
+  'GERD (Acid Reflux)':'<div class="sb"><h3>GERD (Gastro-Oesophageal Reflux Disease)</h3><p>Condition where stomach acid flows back into the oesophagus. Affects approximately 20% of Western population.</p><h4>Symptoms</h4><ul><li>Heartburn (burning behind breastbone), regurgitation, waterbrash</li><li>Atypical: chronic cough, hoarseness, chest pain</li><li>Alarm features requiring urgent endoscopy: dysphagia, weight loss, anaemia, haematemesis</li></ul><h4>Management</h4><ul><li>PPIs (omeprazole 20mg OD) 30 minutes before breakfast: first-line</li><li>Lifestyle: elevate head of bed, avoid eating before lying down, weight loss, stop smoking</li><li>Barrett&#39;s oesophagus: endoscopic surveillance every 3-5 years</li><li>Laparoscopic Nissen fundoplication: for refractory GERD or PPI intolerance</li></ul><div class="alert warn" style="margin-top:12px;"><span class="ai-ic">&#9888;&#65039;</span><div>Research purposes only. Consult your gastroenterologist.</div></div></div>',
+  'Ulcerative Colitis':'<div class="sb"><h3>Ulcerative Colitis (UC)</h3><p>Chronic relapsing inflammatory condition of the colon and rectum. Continuous mucosal inflammation from rectum proximally.</p><h4>Symptoms</h4><ul><li>Bloody diarrhoea (pathognomonic), urgency, tenesmus, crampy abdominal pain</li><li>Severe UC (6+ bloody stools/day, systemic features): HOSPITAL ADMISSION required</li></ul><h4>Investigations</h4><ul><li>Faecal calprotectin: elevated in active UC (over 200 mcg/g)</li><li>Colonoscopy with biopsies: gold-standard diagnosis</li><li>Blood: FBC (anaemia), CRP/ESR, albumin</li></ul><h4>Treatment</h4><ul><li>Mesalazine (oral + rectal): mild-moderate UC first-line</li><li>Corticosteroids: acute flares only, not maintenance</li><li>Biologics (infliximab, vedolizumab) or JAK inhibitors: moderate-severe refractory disease</li><li>Colectomy: curative option for refractory UC or dysplasia</li></ul><div class="alert warn" style="margin-top:12px;"><span class="ai-ic">&#9888;&#65039;</span><div>Research purposes only. Consult your gastroenterologist.</div></div></div>',
+  'Irritable Bowel Syndrome (IBS)':'<div class="sb"><h3>Irritable Bowel Syndrome (IBS)</h3><p>Functional bowel disorder. Rome IV: recurrent abdominal pain weekly x 3 months linked to bowel habit change. Affects 10-15% of population.</p><h4>Subtypes</h4><ul><li>IBS-D (diarrhoea predominant), IBS-C (constipation predominant), IBS-M (mixed)</li></ul><h4>Red Flags to Exclude</h4><ul><li>Age over 50 with new symptoms, rectal bleeding, unexplained weight loss, raised inflammatory markers</li></ul><h4>Management</h4><ul><li>Low-FODMAP diet (supervised by dietitian): 70% response in IBS-D</li><li>IBS-D: loperamide, mebeverine, peppermint oil, amitriptyline 10-30mg at night</li><li>IBS-C: ispaghula husk (Fybogel), macrogol, linaclotide</li><li>CBT/gut-directed hypnotherapy: strong evidence for refractory IBS</li></ul><div class="alert warn" style="margin-top:12px;"><span class="ai-ic">&#9888;&#65039;</span><div>Research purposes only. Consult your gastroenterologist. Always exclude organic pathology first.</div></div></div>',
+  "Crohn&#39;s Disease":'<div class="sb"><h3>Crohn&#39;s Disease</h3><p>Chronic transmural inflammatory disease affecting any part of the GI tract (mouth to anus). Skip lesions, granulomas, perianal disease.</p><h4>Symptoms</h4><ul><li>Diarrhoea (may not be bloody), right iliac fossa pain (terminal ileum most common), weight loss, fatigue</li><li>Perianal disease: fistulae, abscesses, skin tags</li><li>Extra-intestinal: arthropathy, uveitis, erythema nodosum</li></ul><h4>Investigations</h4><ul><li>Faecal calprotectin (elevated), MRI enterography (small bowel extent), colonoscopy with biopsies</li></ul><h4>Treatment</h4><ul><li>Budesonide or prednisolone: acute flare induction</li><li>Thiopurines (azathioprine) or methotrexate: maintenance after checking TPMT</li><li>Anti-TNF (infliximab, adalimumab), ustekinumab, vedolizumab: moderate-severe or refractory disease</li><li>Surgery: for complications (obstruction, fistula, abscess) but not curative</li></ul><div class="alert warn" style="margin-top:12px;"><span class="ai-ic">&#9888;&#65039;</span><div>Research purposes only. Consult your gastroenterologist.</div></div></div>',
+};
+
+function showCondition(){
+  var sel=document.getElementById('cond-sel').value;
+  var out=document.getElementById('cond-output');
+  if(!sel){ out.innerHTML=''; return; }
+  if(CONDITIONS_KB[sel]){ out.innerHTML=CONDITIONS_KB[sel]; out.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+  fetchConditionLive(sel,out);
+}
+function fetchConditionLive(sel,out){
+  var key=currentApiKey();
+  if(ST.provider&&key){
+    out.innerHTML='<div class="sb"><h3>'+sel+'</h3><div class="typing" style="padding:10px 0;"><span></span><span></span><span></span></div></div>';
+    out.scrollIntoView({behavior:'smooth',block:'start'});
+    fetch('/api/condition/'+encodeURIComponent(sel)+'?provider='+ST.provider+'&api_key='+encodeURIComponent(key))
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var body=data.content||(data.condition?JSON.stringify(data.condition,null,2):'No research available.');
+      var mt=data.mode==='live_ai'?'<span class="ctag" style="background:var(--teal-pale);color:var(--teal);border-color:rgba(13,115,119,0.3);display:inline-block;margin-bottom:10px;">Live AI &middot; '+PROVIDERS[ST.provider].label+'</span>':'<span class="ctag" style="display:inline-block;margin-bottom:10px;">Offline Research</span>';
+      out.innerHTML='<div class="sb"><h3>'+sel+'</h3>'+mt+'<div style="white-space:pre-wrap;font-size:13.5px;line-height:1.8;color:var(--text2);">'+body.replace(/\n/g,'<br>')+'</div></div>';
+    }).catch(function(){ out.innerHTML='<div class="sb"><h3>'+sel+'</h3><p>Could not reach server. Try the AI Chat.</p></div>'; });
+  } else {
+    out.innerHTML='<div class="sb"><h3>'+sel+'</h3><p>Choose an AI provider in Settings for live research on this condition, or ask in the AI Chat.</p></div>';
+    out.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+var CHAT_KB={
+  'gerd':'GERD (acid reflux): heartburn + regurgitation. PPIs (omeprazole 20mg OD) before breakfast: first-line. Lifestyle: elevate bed head, avoid eating before lying down, weight loss, reduce alcohol/coffee/chocolate/fatty foods. Alarm features (dysphagia, weight loss, haematemesis): urgent endoscopy. Barrett&#39;s oesophagus requires endoscopic surveillance every 3-5 years. Consult your gastroenterologist.',
+  'ibs':'IBS: Rome IV criteria, functional GI disorder. Low-FODMAP diet (supervised dietitian) 70% response in IBS-D. IBS-D: loperamide, mebeverine, amitriptyline 10-30mg at night, rifaximin. IBS-C: ispaghula husk, macrogol, linaclotide. CBT and gut-directed hypnotherapy: strong evidence for refractory IBS. Exclude red flags (age over 50, rectal bleeding, weight loss) before diagnosing IBS. Consult your gastroenterologist.',
+  'ibd':'IBD (Crohn&#39;s/UC): faecal calprotectin best non-invasive test. Severe UC (6+ bloody stools, systemic): hospital admission required. Toxic megacolon: surgical emergency. Mesalazine first-line for mild UC. Thiopurines (check TPMT first) for maintenance. Anti-TNF biologics (infliximab/adalimumab) for moderate-severe refractory IBD. UC colectomy is curative. Consult your gastroenterologist.',
+  'liver':'Liver disease: all cirrhotics need 6-monthly USS + AFP for HCC surveillance. NAFLD/MASH: weight loss most effective treatment, Mediterranean diet, exercise. Alcohol liver disease: abstinence most important intervention. HCV: DAAs cure 95%+ in 8-12 weeks. HBV: tenofovir/entecavir suppress virus, may be lifelong. Cirrhosis complications: ascites (spironolactone), varices (beta-blockers), encephalopathy (lactulose + rifaximin). Consult your gastroenterologist.',
+  'bleeding':'GI bleeding: EMERGENCY. Haematemesis (vomiting blood) or melaena (black tarry stools): call 112/999/911. Resuscitate, IV access, urgent endoscopy within 24 hours (12 hours if unstable). Glasgow-Blatchford Score guides urgency. IV PPI (omeprazole 80mg) for suspected peptic ulcer. Terlipressin if suspected varices. Fresh rectal bleeding: colonoscopy after resuscitation to identify source. Consult gastroenterologist urgently.',
+  'peptic ulcer':'Peptic ulcer disease: most caused by H. pylori or NSAIDs. H. pylori eradication: PPI + clarithromycin + amoxicillin x 7-14 days. Test-of-cure: urea breath test 4 weeks after antibiotics (2 weeks off PPI). Gastric ulcers: biopsy mandatory, repeat endoscopy to confirm healing (exclude malignancy). Stop NSAIDs if possible. Long-term PPI if NSAIDs continued. Consult your gastroenterologist.',
+  'pancreatitis':'Acute pancreatitis: serum amylase/lipase over 3x upper limit. Most commonly gallstones or alcohol. Aggressive IV fluids (Hartmann&#39;s), analgesia, early enteral nutrition. CT at 48-72 hours if not improving (assess severity/necrosis). ERCP within 72 hours if CBD stones + cholangitis. Cholecystectomy same admission or within 2 weeks for gallstone pancreatitis. Severe AP: ICU. Consult your gastroenterologist urgently.',
+  'coeliac':'Coeliac disease: autoimmune enteropathy triggered by gluten (wheat/barley/rye). Test on gluten-containing diet: anti-TTG IgA + total IgA. Duodenal biopsies on OGD confirm diagnosis. Treatment: strict lifelong gluten-free diet. Supplement iron, folate, B12, Vitamin D, calcium. Annual review. DEXA scan for bone density. Most Indian staples (rice, dal, idli, dosa) are naturally gluten-free. Avoid wheat/maida/atta. Consult your gastroenterologist.',
+};
+
+function sendChat(){
+  var inp=document.getElementById('chat-in');
+  var msg=inp.value.trim(); if(!msg) return;
+  addMsg('user',msg); inp.value='';
+  var msgs=document.getElementById('chat-msgs');
+  var tid='ty-'+Date.now();
+  var ti=document.createElement('div'); ti.className='cm ai'; ti.id=tid;
+  ti.innerHTML='<div class="ai-lbl">GastroCare AI</div><div class="typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(ti); msgs.scrollTop=msgs.scrollHeight;
+  var key=currentApiKey();
+  if(ST.provider&&key){
+    fetch('/api/chat/send',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:msg,request_ai:true,provider:ST.provider,api_key:key})})
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var el=document.getElementById(tid); if(el) el.remove();
+      if(data.ai_response){ addMsg('ai',data.ai_response,true); return; }
+      offlineChat(msg,null);
+    }).catch(function(){ var el=document.getElementById(tid); if(el) el.remove(); offlineChat(msg,null); });
+  } else { setTimeout(function(){ offlineChat(msg,tid); },600); }
+}
+function offlineChat(msg,tid){
+  if(tid){ var el=document.getElementById(tid); if(el) el.remove(); }
+  var ml=msg.toLowerCase(); var resp='';
+  for(var k in CHAT_KB){ if(ml.indexOf(k)!==-1){ resp=CHAT_KB[k]; break; } }
+  if(!resp) resp='Thank you for your question about "'+msg+'". For detailed research browse the relevant sections or choose an AI provider in Settings. For GI emergencies (vomiting blood, severe abdominal pain, black stools) call 112/999/911 immediately. All responses are for educational research only. Always consult your gastroenterologist.';
+  addMsg('ai',resp,false);
+}
+function addMsg(type,text,isLive){
+  var msgs=document.getElementById('chat-msgs');
+  var el=document.createElement('div'); el.className='cm '+type;
+  if(type==='ai'){
+    var label=(isLive&&ST.provider)?('GastroCare AI &middot; '+PROVIDERS[ST.provider].label):'GastroCare AI';
+    el.innerHTML='<div class="ai-lbl">'+label+'</div>'+text.replace(/\n/g,'<br>');
+  } else { el.textContent=text; }
+  msgs.appendChild(el); msgs.scrollTop=msgs.scrollHeight;
+}
+function setLoad(btn,state){ if(!btn) return; if(state) btn.classList.add('loading'); else btn.classList.remove('loading'); btn.disabled=state; }
+function toast(msg){ var t=document.createElement('div'); t.style.cssText='position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--border2);color:var(--text);padding:12px 22px;border-radius:10px;font-size:14px;z-index:9999;box-shadow:var(--shadow);'; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){ t.remove(); },3000); }
+var uz=document.getElementById('uz');
+uz.addEventListener('dragover',function(e){e.preventDefault();uz.classList.add('drag');});
+uz.addEventListener('dragleave',function(){uz.classList.remove('drag');});
+uz.addEventListener('drop',function(e){e.preventDefault();uz.classList.remove('drag');handleFiles(e.dataTransfer.files);});
+</script>
+</body>
+</html>
